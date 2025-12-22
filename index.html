@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNIT SHOP LIVE</title>
+    <title>UNIT SHOP - FINAL VERSION</title>
     <style>
         :root {
-            --card-bg: rgba(26, 26, 26, 0.9);
+            --card-bg: rgba(20, 20, 20, 0.95);
             --accent: #00f2ea;
             --text: #ffffff;
             --danger: #ff4d4d;
@@ -18,119 +18,136 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            font-family: sans-serif;
-            background: #000;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+            color: white;
+            overflow-x: hidden;
         }
 
-        /* תיקון לסרטון הרקע */
-        #bg-video {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            object-fit: cover;
-        }
-
+        /* מכולת החנות */
         .shop-container {
             width: 100vw;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
+            padding: 20px;
             box-sizing: border-box;
-            border-bottom: 3px solid var(--accent);
-            backdrop-filter: blur(5px);
+            border-bottom: 4px solid var(--accent);
+            background: rgba(0,0,0,0.7);
         }
 
         h1 {
-            font-size: 20px;
+            font-size: 28px;
             text-align: center;
             color: var(--accent);
-            margin: 0 0 15px 0;
-            text-shadow: 0 0 10px var(--accent);
+            margin: 0 0 20px 0;
+            text-shadow: 0 0 15px var(--accent);
+            font-weight: 900;
         }
 
-        /* גריד גמיש - זה מה שמאפשר להם להצטמצם */
+        /* גריד גמיש שמאפשר צמצום כרטיסיות */
         .grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 20px;
             justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
+        /* עיצוב הכרטיסייה */
         .card {
             background: var(--card-bg);
-            border: 1px solid #444;
-            border-radius: 10px;
-            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 15px;
+            padding: 15px;
             text-align: center;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: calc(20% - 15px); /* מתחיל כ-5 בשורה */
-            min-width: 120px;
+            width: 210px; /* רוחב שמתאים לטקסט גדול */
             transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
 
-        .card:hover { border-color: var(--accent); transform: scale(1.02); }
+        .card:hover { 
+            border-color: var(--accent); 
+            transform: translateY(-5px); 
+        }
 
+        /* כפתור ה-X למחיקה */
         .delete-btn {
             position: absolute;
-            top: -8px;
-            left: -8px;
+            top: -12px;
+            left: -12px;
             background: var(--danger);
             color: white;
             border: 2px solid white;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            font-size: 14px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             display: none;
-            z-index: 10;
+            z-index: 100;
         }
 
-        .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
+        .card:hover .delete-btn { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
 
+        /* הקטנת השטח של התמונה */
         .img-box {
-            width: 100%;
-            aspect-ratio: 1/1;
+            width: 70%;
+            height: 70px; /* גובה מצומצם */
             background: #252525;
-            border-radius: 6px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
-            font-size: 30px;
+            margin: 0 auto 15px auto;
+            font-size: 35px;
+            border: 1px solid #333;
         }
 
-        .name { font-size: 12px; font-weight: bold; color: var(--text); margin-bottom: 5px; }
-        .price { font-size: 11px; color: var(--price); font-weight: bold; border: 1px solid var(--price); padding: 2px 8px; border-radius: 20px; }
+        /* הגדלת טקסט משמעותית */
+        .name { 
+            font-size: 22px; /* שם גדול מאוד */
+            font-weight: 900; 
+            margin-bottom: 12px;
+            color: var(--text);
+            display: block;
+        }
 
-        /* אנימציית הפיצוץ */
-        @keyframes explode {
+        .price { 
+            font-size: 20px; /* מחיר גדול מאוד */
+            color: var(--price); 
+            font-weight: 800; 
+            border: 2px solid var(--price); 
+            padding: 6px 18px; 
+            border-radius: 10px; 
+            background: rgba(0, 0, 0, 0.8);
+            display: inline-block;
+        }
+
+        /* אנימציית צמצום */
+        @keyframes shrinkAway {
             0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.4); filter: brightness(2); }
             100% { transform: scale(0); opacity: 0; }
         }
-        .exploding { animation: explode 0.4s forwards; pointer-events: none; }
+        .removing { 
+            animation: shrinkAway 0.3s forwards; 
+            pointer-events: none; 
+        }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="./overlay.mp4" type="video/mp4">
-    </video>
-
     <div class="shop-container">
-        <h1>UNIT SHOP - LIVE</h1>
+        <h1>UNIT LIST - LIVE SHOP</h1>
         <div class="grid" id="mainGrid"></div>
     </div>
 
     <script>
+        // רשימת הדמויות
         const myItems = [
             { n: "דמות 1", p: "500 R" }, { n: "דמות 2", p: "450 R" },
             { n: "דמות 3", p: "600 R" }, { n: "דמות 4", p: "300 R" },
@@ -141,10 +158,11 @@
 
         const grid = document.getElementById('mainGrid');
 
+        // פונקציית טעינת החנות
         function renderShop() {
             grid.innerHTML = myItems.map((item, index) => `
                 <div class="card" id="unit-${index}">
-                    <button class="delete-btn" onclick="explodeUnit(${index})">✕</button>
+                    <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
                     <div class="img-box">👤</div>
                     <div class="name">${item.n}</div>
                     <div class="price">${item.p}</div>
@@ -152,14 +170,15 @@
             `).join('');
         }
 
-        function explodeUnit(index) {
+        // פונקציית מחיקה וצמצום
+        function removeUnit(index) {
             const card = document.getElementById(`unit-${index}`);
-            card.classList.add('exploding');
-            
-            // כאן קורה הקסם של הצמצום:
-            setTimeout(() => {
-                card.remove(); // מוחק את האלמנט לגמרי מהדף
-            }, 400);
+            if (card) {
+                card.classList.add('removing');
+                setTimeout(() => {
+                    card.remove(); // כאן קורה הצמצום
+                }, 300);
+            }
         }
 
         renderShop();
