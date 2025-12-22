@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>החנות של איתי - LIVE SHOP</title>
+    <title>UNIT SHOP LIVE</title>
     <style>
-        /* הגדרות צבעים ועיצוב */
         :root {
-            --card-bg: rgba(20, 20, 20, 0.85); /* רקע כרטיסייה חצי שקוף */
-            --accent: #00f2ea; /* טורקיז זוהר */
+            --card-bg: rgba(26, 26, 26, 0.9);
+            --accent: #00f2ea;
             --text: #ffffff;
-            --danger: #ff4d4d; /* אדום לאיקס */
-            --price: #ffd700; /* זהב למחיר */
+            --danger: #ff4d4d;
+            --price: #ffd700;
         }
 
         body, html {
@@ -20,11 +19,11 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: black;
+            font-family: sans-serif;
+            background: #000;
         }
 
-        /* סרטון הרקע שהעלית - overlay.mp4 */
+        /* תיקון לסרטון הרקע */
         #bg-video {
             position: fixed;
             right: 0;
@@ -35,157 +34,103 @@
             object-fit: cover;
         }
 
-        /* מכולת החנות */
         .shop-container {
             width: 100vw;
-            background: rgba(0, 0, 0, 0.4); /* שקיפות מעל הסרטון */
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
             box-sizing: border-box;
-            border-bottom: 4px solid var(--accent);
-            backdrop-filter: blur(5px); /* אפקט טשטוש יוקרתי */
-            box-shadow: 0 5px 30px rgba(0,0,0,0.8);
+            border-bottom: 3px solid var(--accent);
+            backdrop-filter: blur(5px);
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 20px;
             text-align: center;
             color: var(--accent);
-            margin: 0 0 20px 0;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px var(--accent);
+            margin: 0 0 15px 0;
+            text-shadow: 0 0 10px var(--accent);
         }
 
-        /* גריד קשיח של 5x2 */
+        /* גריד גמיש - זה מה שמאפשר להם להצטמצם */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 15px;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
         }
 
-        /* עיצוב כרטיסייה */
         .card {
             background: var(--card-bg);
             border: 1px solid #444;
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 10px;
             text-align: center;
             position: relative;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: calc(20% - 15px); /* מתחיל כ-5 בשורה */
+            min-width: 120px;
+            transition: all 0.3s ease;
         }
 
-        .card:hover {
-            border-color: var(--accent);
-            transform: scale(1.05) translateY(-5px);
-            background: rgba(30, 30, 30, 0.95);
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.4);
-        }
+        .card:hover { border-color: var(--accent); transform: scale(1.02); }
 
-        /* כפתור האיקס למחיקה */
         .delete-btn {
             position: absolute;
-            top: -10px;
-            left: -10px;
+            top: -8px;
+            left: -8px;
             background: var(--danger);
             color: white;
             border: 2px solid white;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 16px;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            display: none; /* מוסתר כברירת מחדל */
-            z-index: 100;
-            box-shadow: 0 0 10px rgba(255, 77, 77, 0.6);
-            transition: transform 0.2s;
+            display: none;
+            z-index: 10;
         }
 
-        .card:hover .delete-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
 
-        .delete-btn:hover {
-            transform: scale(1.2) rotate(90deg);
-        }
-
-        /* אזור התמונה */
         .img-box {
             width: 100%;
             aspect-ratio: 1/1;
-            background: rgba(50, 50, 50, 0.5);
-            border-radius: 8px;
+            background: #252525;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
-            font-size: 32px;
-            border: 1px solid #555;
-        }
-
-        .img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .name {
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text);
             margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+            font-size: 30px;
         }
 
-        .price {
-            font-size: 13px;
-            color: var(--price);
-            font-weight: bold;
-            border: 1px solid var(--price);
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: rgba(255, 215, 0, 0.1);
-        }
+        .name { font-size: 12px; font-weight: bold; color: var(--text); margin-bottom: 5px; }
+        .price { font-size: 11px; color: var(--price); font-weight: bold; border: 1px solid var(--price); padding: 2px 8px; border-radius: 20px; }
 
-        /* אנימציית פיצוץ מטורפת */
+        /* אנימציית הפיצוץ */
         @keyframes explode {
-            0% { transform: scale(1); opacity: 1; filter: brightness(1); }
-            40% { transform: scale(1.4); opacity: 0.8; filter: brightness(2) blur(2px); }
-            100% { transform: scale(2.8); opacity: 0; filter: brightness(5) blur(20px); }
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); filter: brightness(2); }
+            100% { transform: scale(0); opacity: 0; }
         }
-
-        .exploding {
-            animation: explode 0.5s forwards ease-out;
-            pointer-events: none;
-        }
+        .exploding { animation: explode 0.4s forwards; pointer-events: none; }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop id="bg-video">
-        <source src="overlay.mp4" type="video/mp4">
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="./overlay.mp4" type="video/mp4">
     </video>
 
     <div class="shop-container">
-        <h1>UNIT LIST - LIVE SHOP</h1>
-        <div class="grid" id="mainGrid">
-            </div>
+        <h1>UNIT SHOP - LIVE</h1>
+        <div class="grid" id="mainGrid"></div>
     </div>
 
     <script>
-        // רשימת הדמויות (10 דמויות)
         const myItems = [
             { n: "דמות 1", p: "500 R" }, { n: "דמות 2", p: "450 R" },
             { n: "דמות 3", p: "600 R" }, { n: "דמות 4", p: "300 R" },
@@ -207,17 +152,14 @@
             `).join('');
         }
 
-        // פונקציית הפיצוץ
         function explodeUnit(index) {
             const card = document.getElementById(`unit-${index}`);
-            if (!card) return;
-
             card.classList.add('exploding');
-
-            // העלמה מהמסך אחרי סיום האנימציה
+            
+            // כאן קורה הקסם של הצמצום:
             setTimeout(() => {
-                card.style.visibility = 'hidden';
-            }, 500);
+                card.remove(); // מוחק את האלמנט לגמרי מהדף
+            }, 400);
         }
 
         renderShop();
