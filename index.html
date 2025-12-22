@@ -3,124 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>החנות של איתי</title>
+    <title>החנות של איתי - Roblox Shop</title>
     <style>
         :root {
-            --bg-color: rgba(10, 10, 10, 0.85); /* רקע מעט שקוף כדי שיראו את המשחק */
-            --card-bg: #161616;
-            --accent-color: #00f2ea;
+            --bg-color: rgba(15, 15, 15, 0.9); /* רקע כהה ושקוף מעט */
+            --card-bg: #1e1e1e;
+            --accent-color: #00f2ea; /* טורקיז טיקטוק */
+            --price-color: #ffd700; /* זהב רובאקס */
             --text-color: #ffffff;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: transparent;
+            background-color: transparent; /* חשוב כדי שתוכל להלביש על המשחק */
             color: var(--text-color);
-            font-family: sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
             overflow: hidden;
         }
 
-        /* הקונטיינר עכשיו רחב וקצר יותר */
+        /* הקונטיינר הראשי - הגדרנו רוחב שיתאים ל-2 חמישיות מהמסך */
         .shop-container {
             width: 100vw;
-            height: auto;
+            max-width: 800px;
             background-color: var(--bg-color);
-            padding: 8px;
+            padding: 15px;
             box-sizing: border-box;
-            border-bottom: 2px solid var(--accent-color);
+            border-bottom: 3px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
 
         h1 {
-            font-size: 14px;
+            font-size: 1.2rem;
             text-align: center;
-            margin: 0 0 8px 0;
+            margin: 0 0 15px 0;
             color: var(--accent-color);
-            letter-spacing: 1px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px var(--accent-color);
         }
 
-        /* גריד של 5 עמודות ו-2 שורות */
+        /* גריד של 5 עמודות ו-2 שורות בדיוק */
         .grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 5px;
+            gap: 10px;
         }
 
         .card {
             background: var(--card-bg);
             border: 1px solid #333;
-            border-radius: 4px;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 4px;
-            aspect-ratio: 1 / 1; /* שומר על כרטיסיות ריבועיות וקטנות */
+            justify-content: space-between;
+            padding: 8px;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .img-box {
-            width: 70%;
-            height: 50%;
-            background: #252525;
+        .card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 0 10px rgba(0, 242, 234, 0.3);
+        }
+
+        /* אזור התמונה - שומר על יחס ריבועי */
+        .image-box {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #2a2a2a;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 3px;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 2rem;
+            border: 1px solid #444;
+            overflow: hidden;
         }
 
-        .img-box img {
+        .image-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
         .name {
-            font-size: 9px;
+            font-size: 0.8rem;
             font-weight: bold;
-            margin-top: 3px;
+            text-align: center;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
         }
 
-        .price {
-            font-size: 8px;
-            color: #ffd700;
+        .price-tag {
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--price-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: bold;
+            border: 1px solid var(--price-color);
         }
+
+        /* עיצוב פס גלילה קטן אם צריך */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <div class="shop-container">
-    <h1>UNIT SHOP</h1>
-    <div class="grid" id="mainGrid"></div>
+    <h1>UNIT LIST - LIVE SHOP</h1>
+    <div class="grid" id="itemsGrid">
+        </div>
 </div>
 
 <script>
-    // רשימת 10 הדמויות שלך - כאן אתה מעדכן שמות ומחירים
-    const myItems = [
-        { n: "דמות 1", p: "500 R", i: "" },
-        { n: "דמות 2", p: "450 R", i: "" },
-        { n: "דמות 3", p: "600 R", i: "" },
-        { n: "דמות 4", p: "300 R", i: "" },
-        { n: "דמות 5", p: "700 R", i: "" },
-        { n: "דמות 6", p: "250 R", i: "" },
-        { n: "דמות 7", p: "800 R", i: "" },
-        { n: "דמות 8", p: "150 R", i: "" },
-        { n: "דמות 9", p: "900 R", i: "" },
-        { n: "דמות 10", p: "1K R", i: "" }
+    // --- רשימת המוצרים שלך - שנה כאן כל שבוע ---
+    const myUnits = [
+        { name: "דמות 1", price: "500₪", img: "" },
+        { name: "דמות 2", price: "450₪", img: "" },
+        { name: "דמות 3", price: "600₪", img: "" },
+        { name: "דמות 4", price: "300₪", img: "" },
+        { name: "דמות 5", price: "700₪", img: "" },
+        { name: "דמות 6", price: "250₪", img: "" },
+        { name: "דמות 7", price: "800₪", img: "" },
+        { name: "דמות 8", price: "150₪", img: "" },
+        { name: "דמות 9", price: "900₪", img: "" },
+        { name: "דמות 10", price: "1,000₪", img: "" }
     ];
 
-    const grid = document.getElementById('mainGrid');
-    grid.innerHTML = myItems.map(item => `
-        <div class="card">
-            <div class="img-box">${item.i ? `<img src="${item.i}">` : '👤'}</div>
-            <div class="name">${item.n}</div>
-            <div class="price">${item.p}</div>
-        </div>
-    `).join('');
+    const grid = document.getElementById('itemsGrid');
+
+    // פונקציה ליצירת הכרטיסיות
+    function loadItems() {
+        grid.innerHTML = myUnits.map(unit => `
+            <div class="card">
+                <div class="image-box">
+                    ${unit.img ? `<img src="${unit.img}" alt="${unit.name}">` : '👤'}
+                </div>
+                <div class="name">${unit.name}</div>
+                <div class="price-tag">${unit.price}</div>
+            </div>
+        `).join('');
+    }
+
+    loadItems();
 </script>
 
 </body>
