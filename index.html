@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNIT SHOP LIVE - EDITABLE</title>
+    <title>UNIT SHOP LIVE - WITH COLOR DOTS</title>
     <style>
-        /* --- חלק 1: צבעים ועיצוב כללי (אפשר לשנות כאן צבעים) --- */
         :root {
             --card-bg: rgba(20, 20, 20, 0.95);
-            --accent: #00f2ea; /* צבע טורקיז זוהר */
-            --text: #ffffff;   /* צבע טקסט לבן */
-            --danger: #ff4d4d; /* צבע כפתור האיקס */
-            --price: #ffd700;  /* צבע המחיר - זהב */
+            --accent: #00f2ea;
+            --text: #ffffff;
+            --danger: #ff4d4d;
+            --price: #ffd700;
+
+            /* הגדרות צבעי הדרגות */
+            --GOLD: #ffd700;
+            --DIAMOND: #b9f2ff;
+            --RAINBOW: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+            --GALAXY: radial-gradient(circle, #ff00ff, #7a00ff, #000033);
+            --RADIOACTIVE: #39ff14;
+            --LAVA: #ff4500;
+            --BLOODROT: #8a0303;
+            --CANDY: #ff69b4;
+            --YING_YANG: conic-gradient(white 180deg, black 180deg);
         }
 
         body, html {
@@ -87,10 +97,9 @@
 
         .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
 
-        /* אזור התמונה - הוגדל לבקשתך */
         .img-box {
             width: 90%;
-            height: 110px; /* גובה מאוזן חדש */
+            height: 110px; 
             background: #252525;
             border-radius: 10px;
             display: flex;
@@ -101,25 +110,36 @@
             overflow: hidden;
         }
 
-        /* הגדרות לתמונה עצמה בתוך הריבוע */
         .img-box img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* שומר על פרופורציות התמונה */
+            object-fit: contain;
         }
 
-        .img-box span { font-size: 50px; } /* גודל האימוג'י אם אין תמונה */
+        /* עיצוב שם הדמות והעיגול */
+        .name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* רווח קטן בין העיגול לטקסט */
+            margin-bottom: 10px;
+        }
 
-        /* טקסט השם */
+        .color-dot {
+            width: 16px; /* גודל טיפה יותר גדול מהטקסט */
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.3);
+            flex-shrink: 0;
+        }
+
         .name { 
             font-size: 19px; 
             font-weight: 800; 
-            margin-bottom: 10px;
             color: var(--text);
-            display: block;
+            margin: 0;
         }
 
-        /* טקסט המחיר */
         .price { 
             font-size: 17px; 
             color: var(--price); 
@@ -142,56 +162,67 @@
 
     <div class="shop-container">
         <h1>UNIT LIST - LIVE SHOP</h1>
-        
-        <div class="grid" id="mainGrid">
-            </div>
+        <div class="grid" id="mainGrid"></div>
     </div>
 
     <script>
-        /* --- חלק 2: ניהול המוצרים (כאן אתה משנה הכל!) --- */
-        
-        // n = שם הדמות
-        // p = מחיר
-        // img = קישור לתמונה (אם תרצה לשים תמונה במקום אימוג'י)
-        const myItems = [
-            { n: "960M/S", p: "230₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ef/Moby.png" },
-            { n: "469M/S", p: "120₪", img: "https://static.wikia.nocookie.net/stealabr/images/c/ce/TangTangVfx.png" },
-            { n: "225M/S", p: "60₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/6f/Time_moving_slow.png" },
-            { n: "187.5M/S", p: "55₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/6f/Time_moving_slow.png" },
-            { n: "390M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/8/86/Mieteteira_Bicicleteira.png" },
-            { n: "117.2M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/c/ce/TangTangVfx.png" },
-            { n: "253M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png" },
-            { n: "280M/S", p: "50₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/e8/Las_Sis.png" },
-            { n: "230M/S", p: "35₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png" },
-            { n: "150M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/d/d8/Carti.png" }
-        ];
-
-        /* הסבר קצר: 
-           כדי לשים תמונה אמיתית, תחליף את ה- "👤" בקישור לתמונה, למשל: "img1.png".
-           אם הקובץ נמצא בתיקייה ב-GitHub, פשוט תרשום את השם שלו.
+        /* ניהול המוצרים:
+           הוספתי משתנה 'c' לכל פריט.
+           ערכים אפשריים: GOLD, DIAMOND, RAINBOW, GALAXY, RADIOACTIVE, LAVA, BLOODROT, CANDY, YING_YANG
         */
+        const myItems = [
+            { n: "960M/S", p: "230₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ef/Moby.png", c: "GOLD" },
+            { n: "469M/S", p: "120₪", img: "https://static.wikia.nocookie.net/stealabr/images/c/ce/TangTangVfx.png", c: "DIAMOND" },
+            { n: "225M/S", p: "60₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/6f/Time_moving_slow.png", c: "RAINBOW" },
+            { n: "187.5M/S", p: "55₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/6f/Time_moving_slow.png", c: "GALAXY" },
+            { n: "390M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/8/86/Mieteteira_Bicicleteira.png", c: "RADIOACTIVE" },
+            { n: "117.2M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/c/ce/TangTangVfx.png", c: "LAVA" },
+            { n: "253M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png", c: "BLOODROT" },
+            { n: "280M/S", p: "50₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/e8/Las_Sis.png", c: "CANDY" },
+            { n: "230M/S", p: "35₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png", c: "YING_YANG" },
+            { n: "150M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/d/d8/Carti.png", c: "GOLD" }
+        ];
 
         const grid = document.getElementById('mainGrid');
 
+        // פונקציה שמחזירה את סגנון הצבע לעיגול
+        function getColorStyle(colorName) {
+            const colors = {
+                GOLD: 'var(--GOLD)',
+                DIAMOND: 'var(--DIAMOND)',
+                RAINBOW: 'var(--RAINBOW)',
+                GALAXY: 'var(--GALAXY)',
+                RADIOACTIVE: 'var(--RADIOACTIVE)',
+                LAVA: 'var(--LAVA)',
+                BLOODROT: 'var(--BLOODROT)',
+                CANDY: 'var(--CANDY)',
+                YING_YANG: 'var(--YING_YANG)'
+            };
+            return colors[colorName] || 'gray';
+        }
+
         function renderShop() {
             grid.innerHTML = myItems.map((item, index) => {
-                // בדיקה אם לשים אימוג'י או תמונה
                 const displayImg = item.img.length > 2 
                     ? `<img src="${item.img}" alt="unit">` 
                     : `<span>${item.img}</span>`;
+
+                const dotBackground = getColorStyle(item.c);
 
                 return `
                     <div class="card" id="unit-${index}">
                         <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
                         <div class="img-box">${displayImg}</div>
-                        <div class="name">${item.n}</div>
+                        <div class="name-container">
+                            <div class="color-dot" style="background: ${dotBackground}"></div>
+                            <div class="name">${item.n}</div>
+                        </div>
                         <div class="price">${item.p}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        // פונקציית המחיקה
         function removeUnit(index) {
             const card = document.getElementById(`unit-${index}`);
             if (card) {
@@ -202,7 +233,6 @@
             }
         }
 
-        // הפעלת החנות
         renderShop();
     </script>
 </body>
