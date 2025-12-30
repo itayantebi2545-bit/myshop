@@ -30,11 +30,11 @@
             justify-content: center; max-width: 1400px; margin: 0 auto;
         }
 
-        /* עיצוב בסיסי לכרטיסייה - הילה לבנה כברירת מחדל */
+        /* כרטיסייה בסיסית - עובי 2px קבוע לכולם */
         .card {
             background: var(--card-bg); border-radius: 12px; padding: 18px;
             text-align: center; position: relative; width: 200px;
-            border: 2px solid rgba(255, 255, 255, 0.3); 
+            border: 2px solid rgba(255, 255, 255, 0.3); /* לבן זוהר כברירת מחדל */
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
             transition: transform 0.2s;
         }
@@ -54,43 +54,26 @@
             border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3);
         }
 
-        /* --- הילות לפי דרגה --- */
+        /* --- הילות לפי דרגה (כולן בעובי 2px) --- */
         
-        /* GOLD */
         .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        
-        /* DIAMOND */
         .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.5); }
-
-        /* GALAXY */
         .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
-
-        /* CANDY - ורוד זוהר */
         .card.CANDY { border-color: #ff69b4; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); }
-
-        /* RADIOACTIVE - ירוק זוהר */
         .card.RADIOACTIVE { border-color: #39ff14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); }
+        .card.BLOODROT { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
+        .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
 
-        /* BLOODROT - אדום זוהר */
-        .card.BLOODROT { border-color: #8a0303; box-shadow: 0 0 20px rgba(138, 3, 3, 0.8); }
-
-        /* YING YANG - שחור לבן זוהר */
-        .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), inset 0 0 10px rgba(0,0,0,0.5); }
-
-        /* אפקט RAINBOW - מסגרת שמשנה צבעים */
+        /* תיקון RAINBOW - עכשיו באותו עובי בדיוק */
         .card.RAINBOW {
-            border-color: transparent;
-            background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
-                              linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
-            background-origin: border-box;
-            background-clip: content-box, border-box;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
-            animation: rainbowBorder 3s linear infinite;
+            border: 2px solid #fff; /* בסיס לבן שמשנה צבע */
+            animation: rainbowStroke 3s linear infinite;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        @keyframes rainbowBorder {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+        @keyframes rainbowStroke {
+            0% { border-color: red; filter: hue-rotate(0deg); }
+            100% { border-color: red; filter: hue-rotate(360deg); }
         }
 
         /* כפתור מחיקה */
