@@ -6,7 +6,7 @@
     <title>FUELLING SHOP</title>
     <style>
         :root {
-            --card-bg: rgba(20, 20, 20, 0.95);
+            --card-bg: rgba(25, 25, 25, 0.85);
             --accent: #00f2ea;
             --text: #ffffff;
             --danger: #ff4d4d;
@@ -29,54 +29,66 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #020205 100%);
             color: white;
             overflow-x: hidden;
         }
 
         .shop-container {
             width: 100vw;
-            padding: 20px;
+            padding: 40px 20px;
             box-sizing: border-box;
-            border-bottom: 4px solid var(--accent);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.4);
+            min-height: 100vh;
         }
 
         h1 {
-            font-size: 26px;
+            font-size: 42px;
             text-align: center;
             color: var(--accent);
-            margin: 0 0 20px 0;
-            text-shadow: 0 0 15px var(--accent);
+            margin: 0 0 40px 0;
+            text-shadow: 0 0 20px rgba(0, 242, 234, 0.6);
             font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 25px;
             justify-content: center;
             max-width: 1400px;
             margin: 0 auto;
         }
 
+        /* עיצוב כרטיס משודרג */
         .card {
             background: var(--card-bg);
-            border: 2px solid #444;
-            border-radius: 15px;
-            padding: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
             position: relative;
-            width: 190px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            width: 210px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: visible;
         }
 
-        .card:hover { 
-            border-color: var(--accent); 
-            transform: translateY(-5px); 
+        /* אפקט ריחוף */
+        .card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.7);
         }
+
+        /* הילה לפי דרגה - מיושם דרך JS */
+        .card.glow-GOLD { box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2); }
+        .card.glow-DIAMOND { box-shadow: 0 5px 20px rgba(26, 130, 255, 0.2); }
+        .card.glow-RAINBOW { box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2); }
 
         .delete-btn {
             position: absolute;
@@ -86,69 +98,78 @@
             color: white;
             border: 2px solid white;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             display: none;
             z-index: 100;
+            transition: transform 0.2s;
         }
-
+        .delete-btn:hover { transform: scale(1.2); }
         .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
 
         .img-box {
-            width: 90%;
-            height: 110px; 
-            background: #252525;
-            border-radius: 10px;
+            width: 100%;
+            height: 130px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 12px auto;
-            border: 1px solid #333;
-            overflow: hidden;
+            margin: 0 auto 15px auto;
+            position: relative;
         }
 
         .img-box img {
-            width: 100%;
-            height: 100%;
+            width: 110%;
+            height: 110%;
             object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+            transition: transform 0.3s;
         }
+        .card:hover .img-box img { transform: scale(1.1); }
 
-        /* עיצוב שם הדמות והעיגול */
         .name-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px; /* רווח קטן בין העיגול לטקסט */
-            margin-bottom: 10px;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .color-dot {
-            width: 16px; /* גודל טיפה יותר גדול מהטקסט */
-            height: 16px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px currentColor;
             flex-shrink: 0;
         }
 
-        .name { 
-            font-size: 19px; 
-            font-weight: 800; 
-            color: var(--text);
+        .name {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
             margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        .price { 
-            font-size: 17px; 
-            color: var(--price); 
-            font-weight: 700; 
-            border: 2px solid var(--price); 
-            padding: 5px 15px; 
-            border-radius: 8px; 
-            background: rgba(0, 0, 0, 0.8);
+        .price {
+            font-size: 18px;
+            color: var(--price);
+            font-weight: 800;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 6px 20px;
+            border-radius: 50px;
+            background: linear-gradient(180deg, rgba(255,215,0,0.1) 0%, rgba(0,0,0,0.4) 100%);
             display: inline-block;
+            transition: all 0.3s;
+        }
+        .card:hover .price {
+            background: var(--price);
+            color: black;
+            box-shadow: 0 0 15px var(--price);
         }
 
         @keyframes shrinkAway {
@@ -166,10 +187,6 @@
     </div>
 
     <script>
-        /* ניהול המוצרים:
-           הוספתי משתנה 'c' לכל פריט.
-           ערכים אפשריים: GOLD, DIAMOND, RAINBOW, GALAXY, RADIOACTIVE, LAVA, BLOODROT, CANDY, YING_YANG
-        */
         const myItems = [
             { n: "212.5M/S", p: "90₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c: "GOLD" },
             { n: "143.7M/S", p: "55₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f8/Chipsoqueso.png", c: "GOLD" },
@@ -190,7 +207,6 @@
 
         const grid = document.getElementById('mainGrid');
 
-        // פונקציה שמחזירה את סגנון הצבע לעיגול
         function getColorStyle(colorName) {
             const colors = {
                 GOLD: 'var(--GOLD)',
@@ -203,7 +219,7 @@
                 CANDY: 'var(--CANDY)',
                 YING_YANG: 'var(--YING_YANG)'
             };
-            return colors[colorName] || 'gray';
+            return colors[colorName] || '#888';
         }
 
         function renderShop() {
@@ -212,14 +228,18 @@
                     ? `<img src="${item.img}" alt="unit">` 
                     : `<span>${item.img}</span>`;
 
-                const dotBackground = getColorStyle(item.c);
+                const colorVal = getColorStyle(item.c);
+                const glowClass = item.c ? `glow-${item.c}` : '';
+                
+                // יצירת הילה דינמית לפי הצבע
+                const dynamicGlow = item.c ? `style="box-shadow: 0 0 15px ${colorVal}33;"` : '';
 
                 return `
-                    <div class="card" id="unit-${index}">
+                    <div class="card ${glowClass}" id="unit-${index}" ${dynamicGlow}>
                         <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
                         <div class="img-box">${displayImg}</div>
                         <div class="name-container">
-                            <div class="color-dot" style="background: ${dotBackground}"></div>
+                            <div class="color-dot" style="background: ${colorVal}; color: ${colorVal}"></div>
                             <div class="name">${item.n}</div>
                         </div>
                         <div class="price">${item.p}</div>
