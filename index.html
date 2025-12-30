@@ -6,137 +6,92 @@
     <title>FUELLING SHOP</title>
     <style>
         :root {
-            --card-bg: rgba(25, 25, 30, 0.95);
+            --card-bg: rgba(20, 20, 25, 0.95);
             --accent: #00f2ea;
             --price-color: #ffd700;
-            
-            /* צבעי הילות */
-            --glow-DEFAULT: rgba(255, 255, 255, 0.5); /* לבן ליחידות רגילות */
-            --glow-GOLD: rgba(255, 215, 0, 0.6);
-            --glow-DIAMOND: rgba(26, 130, 255, 0.6);
-            --glow-RAINBOW: rgba(255, 255, 255, 0.8); /* הילה חזקה ליחידת קשת */
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a0a;
-            color: white;
-            overflow-x: hidden;
+            background: #050505; color: white; overflow-x: hidden;
         }
 
-        .shop-container {
-            width: 100vw;
-            padding: 40px 20px;
-            box-sizing: border-box;
-            min-height: 100vh;
-        }
+        .shop-container { width: 100vw; padding: 40px 20px; box-sizing: border-box; min-height: 100vh; }
 
         h1 {
-            font-size: 40px;
-            text-align: center;
-            color: var(--accent);
-            margin: 0 0 40px 0;
-            text-shadow: 0 0 15px var(--accent);
-            font-weight: 900;
-            letter-spacing: 2px;
+            font-size: 40px; text-align: center; color: var(--accent);
+            margin: 0 0 40px 0; text-shadow: 0 0 15px var(--accent);
+            font-weight: 900; letter-spacing: 2px;
         }
 
         .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            max-width: 1400px;
-            margin: 0 auto;
+            display: flex; flex-wrap: wrap; gap: 20px;
+            justify-content: center; max-width: 1400px; margin: 0 auto;
         }
 
-        /* עיצוב הכרטיסייה */
+        /* עיצוב בסיסי לכרטיסייה */
         .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 18px;
-            text-align: center;
-            position: relative;
-            width: 200px;
-            /* הילה לבנה כברירת מחדל */
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 15px var(--glow-DEFAULT);
+            background: var(--card-bg); border-radius: 12px; padding: 18px;
+            text-align: center; position: relative; width: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.3); /* לבן זוהר כברירת מחדל */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
             transition: transform 0.2s;
+        }
+
+        .img-box {
+            width: 100%; height: 120px; background: rgba(255,255,255,0.05);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
+        }
+
+        .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
+
+        .name { font-size: 19px; font-weight: 800; margin-bottom: 12px; }
+
+        .price {
+            font-size: 17px; color: var(--price-color); font-weight: bold;
+            border: 1.5px solid var(--price-color); padding: 4px 15px;
+            border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3);
+        }
+
+        /* --- הילות לפי דרגה --- */
+        
+        /* GOLD */
+        .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        
+        /* DIAMOND */
+        .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.5); }
+
+        /* GALAXY */
+        .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
+
+        /* אפקט RAINBOW - מסגרת שמשנה צבעים */
+        .card.RAINBOW {
+            border-color: transparent;
+            background-image: linear-gradient(var(--card-bg), var(--card-bg)), 
+                              linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+            animation: rainbowBorder 3s linear infinite;
+        }
+
+        @keyframes rainbowBorder {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
         }
 
         /* כפתור מחיקה */
         .delete-btn {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            background: #ff4d4d;
-            color: white;
-            border: 2px solid white;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-            z-index: 10;
+            position: absolute; top: -10px; left: -10px; background: #ff4d4d;
+            color: white; border: 2px solid white; border-radius: 50%;
+            width: 28px; height: 28px; font-weight: bold; cursor: pointer;
+            display: none; z-index: 10;
         }
         .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
-
-        /* קופסת תמונה */
-        .img-box {
-            width: 100%;
-            height: 120px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .img-box img {
-            max-width: 95%;
-            max-height: 95%;
-            object-fit: contain;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
-        }
-
-        .name {
-            font-size: 19px;
-            font-weight: 800;
-            margin: 0 0 12px 0;
-        }
-
-        /* מחיר */
-        .price {
-            font-size: 17px;
-            color: var(--price-color);
-            font-weight: bold;
-            border: 1.5px solid var(--price-color);
-            padding: 4px 15px;
-            border-radius: 6px;
-            display: inline-block;
-            background: rgba(0,0,0,0.3);
-        }
-
-        /* סוגי הילות לפי צבעים */
-        .card.GOLD { border-color: gold; box-shadow: 0 0 20px var(--glow-GOLD); }
-        .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px var(--glow-DIAMOND); }
-        .card.RAINBOW { 
-            border-color: white; 
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-            background: linear-gradient(to bottom, var(--card-bg), rgba(255,255,255,0.05));
-        }
-        .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.4); }
-
-        @keyframes shrink {
-            to { transform: scale(0); opacity: 0; }
-        }
+        
         .removing { animation: shrink 0.3s forwards; }
+        @keyframes shrink { to { transform: scale(0); opacity: 0; } }
     </style>
 </head>
 <body>
@@ -147,7 +102,6 @@
     </div>
 
     <script>
-        // רשימת המוצרים שלך (נשארה בדיוק אותו דבר)
         const myItems = [
             { n: "212.5M/S", p: "90₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c: "GOLD" },
             { n: "143.7M/S", p: "55₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f8/Chipsoqueso.png", c: "GOLD" },
@@ -170,15 +124,11 @@
 
         function renderShop() {
             grid.innerHTML = myItems.map((item, index) => {
-                // בדיקה אם יש צבע (c), אם לא - הכרטיסייה תשתמש בעיצוב הלבן הרגיל
                 const colorClass = item.c ? item.c : 'DEFAULT';
-
                 return `
                     <div class="card ${colorClass}" id="unit-${index}">
                         <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
-                        <div class="img-box">
-                            <img src="${item.img}" alt="unit">
-                        </div>
+                        <div class="img-box"><img src="${item.img}" alt="unit"></div>
                         <div class="name">${item.n}</div>
                         <div class="price">${item.p}</div>
                     </div>
@@ -193,7 +143,6 @@
                 setTimeout(() => card.remove(), 300);
             }
         }
-
         renderShop();
     </script>
 </body>
