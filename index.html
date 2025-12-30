@@ -30,15 +30,13 @@
             justify-content: center; max-width: 1400px; margin: 0 auto;
         }
 
-        /* כרטיסייה בסיסית - עובי 2px קבוע */
+        /* כרטיסייה בסיסית - לבן זוהר נקי כברירת מחדל */
         .card {
             background: var(--card-bg); border-radius: 12px; padding: 18px;
             text-align: center; position: relative; width: 200px;
-            border: 2px solid rgba(255, 255, 255, 0.3); 
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffffff; /* לבן נקי */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); /* הילה לבנה בולטת */
             transition: transform 0.2s;
-            z-index: 1;
-            overflow: hidden; /* שומר שהאפקטים לא יצאו מהמסגרת */
         }
 
         .img-box {
@@ -48,43 +46,29 @@
 
         .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
 
-        .name { font-size: 19px; font-weight: 800; margin-bottom: 12px; position: relative; z-index: 2; }
-        .price { font-size: 17px; color: var(--price-color); font-weight: bold; border: 1.5px solid var(--price-color); padding: 4px 15px; border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3); position: relative; z-index: 2; }
+        .name { font-size: 19px; font-weight: 800; margin-bottom: 12px; }
+        .price { 
+            font-size: 17px; color: var(--price-color); font-weight: bold; 
+            border: 1.5px solid var(--price-color); padding: 4px 15px; 
+            border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3); 
+        }
 
-        /* --- הילות לפי דרגה --- */
-        .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.5); }
-        .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
+        /* --- הגדרות צבעים (כולם באותו עובי 2px) --- */
+        
+        .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+        .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.6); }
+        .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.6); }
         .card.CANDY { border-color: #ff69b4; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); }
-        .card.RADIOACTIVE { border-color: #39ff14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); }
-        .card.BLOODROT { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
-        .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+        .card.RADIOACTIVE { border-color: #39ff14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.7); }
+        .card.BLOODROT { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
+        .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 25px rgba(255, 255, 255, 0.5), inset 0 0 10px rgba(0,0,0,0.8); }
 
-        /* תיקון RAINBOW סופי - עובי 2px ולא משפיע על אחרים */
-        .card.RAINBOW {
-            border-color: transparent;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .card.RAINBOW::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 12px;
-            padding: 2px; /* זה קובע את העובי - 2px בדיוק */
-            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-            background-size: 400%;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            animation: rainbowMove 8s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes rainbowMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* RAINBOW - באותו גודל ועובי, צבעוני נקי */
+        .card.RAINBOW { 
+            border: 2px solid transparent;
+            background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+                        linear-gradient(45deg, red, orange, yellow, green, blue, purple) border-box;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         /* כפתור מחיקה */
@@ -111,19 +95,19 @@
         const myItems = [
             { n: "212.5M/S", p: "90₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c: "GOLD" },
             { n: "143.7M/S", p: "55₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f8/Chipsoqueso.png", c: "GOLD" },
-            { n: "180M/S", p: "69₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/ff/Lavadorito_Spinito.png" },
+            { n: "180M/S", p: "69₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/ff/Lavadorito_Spinito.png" }, // DEFAULT
             { n: "105M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/0/09/Esoksekolahwnovfx.png", c: "DIAMOND" },
             { n: "180M/S", p: "70₪", img: "https://static.wikia.nocookie.net/stealabr/images/c/c6/Nuclearo_Dinosauro.png", c: "RAINBOW" },
             { n: "390M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/8/86/Mieteteira_Bicicleteira.png", c: "RAINBOW" },
             { n: "253M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png", c: "GALAXY" },
-            { n: "337.5M/S", p: "100₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Esok_Ginger.png" },
-            { n: "170M/S", p: "70₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png" },
-            { n: "625M/S", p: "85₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f2/Lasecretcombinasion.png" },
+            { n: "337.5M/S", p: "100₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Esok_Ginger.png" }, // DEFAULT
+            { n: "170M/S", p: "70₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png" }, // DEFAULT
+            { n: "625M/S", p: "85₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f2/Lasecretcombinasion.png" }, // DEFAULT
             { n: "675M/S", p: "135₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/ff/Lavadorito_Spinito.png", c: "RAINBOW" },
             { n: "243.7M/S", p: "80₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Esok_Ginger.png", c: "GOLD" },
             { n: "276M/S", p: "45₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png", c: "GALAXY" },
-            { n: "230M/S", p: "35₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png" },
-            { n: "100M/S", p: "80₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/69/Loshotspotsitos.png" },
+            { n: "230M/S", p: "35₪", img: "https://static.wikia.nocookie.net/stealabr/images/f/f9/Candy%21.png" }, // DEFAULT
+            { n: "100M/S", p: "80₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/69/Loshotspotsitos.png" }, // DEFAULT
         ];
 
         const grid = document.getElementById('mainGrid');
