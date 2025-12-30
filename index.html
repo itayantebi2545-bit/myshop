@@ -30,13 +30,15 @@
             justify-content: center; max-width: 1400px; margin: 0 auto;
         }
 
-        /* כרטיסייה בסיסית - עובי 2px קבוע לכולם */
+        /* כרטיסייה בסיסית - עובי 2px קבוע */
         .card {
             background: var(--card-bg); border-radius: 12px; padding: 18px;
             text-align: center; position: relative; width: 200px;
-            border: 2px solid rgba(255, 255, 255, 0.3); /* לבן זוהר כברירת מחדל */
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3); 
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             transition: transform 0.2s;
+            z-index: 1;
+            overflow: hidden; /* שומר שהאפקטים לא יצאו מהמסגרת */
         }
 
         .img-box {
@@ -46,16 +48,10 @@
 
         .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
 
-        .name { font-size: 19px; font-weight: 800; margin-bottom: 12px; }
+        .name { font-size: 19px; font-weight: 800; margin-bottom: 12px; position: relative; z-index: 2; }
+        .price { font-size: 17px; color: var(--price-color); font-weight: bold; border: 1.5px solid var(--price-color); padding: 4px 15px; border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3); position: relative; z-index: 2; }
 
-        .price {
-            font-size: 17px; color: var(--price-color); font-weight: bold;
-            border: 1.5px solid var(--price-color); padding: 4px 15px;
-            border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3);
-        }
-
-        /* --- הילות לפי דרגה (כולן בעובי 2px) --- */
-        
+        /* --- הילות לפי דרגה --- */
         .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
         .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.5); }
         .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
@@ -64,16 +60,31 @@
         .card.BLOODROT { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
         .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
 
-        /* תיקון RAINBOW - עכשיו באותו עובי בדיוק */
+        /* תיקון RAINBOW סופי - עובי 2px ולא משפיע על אחרים */
         .card.RAINBOW {
-            border: 2px solid #fff; /* בסיס לבן שמשנה צבע */
-            animation: rainbowStroke 3s linear infinite;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            border-color: transparent;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
-        @keyframes rainbowStroke {
-            0% { border-color: red; filter: hue-rotate(0deg); }
-            100% { border-color: red; filter: hue-rotate(360deg); }
+        .card.RAINBOW::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 12px;
+            padding: 2px; /* זה קובע את העובי - 2px בדיוק */
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            background-size: 400%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: rainbowMove 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes rainbowMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* כפתור מחיקה */
