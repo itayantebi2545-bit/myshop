@@ -11,8 +11,8 @@
       --accent: #00f2ea;
       --price-color: #ffd700;
 
-      /* Trait size */
-      --trait-size: 18px;
+      --trait-size: 18px; /* icon size */
+      --ms-width: 92px;   /* fixed width for the M/S text column (keeps it centered always) */
     }
 
     body, html {
@@ -50,38 +50,43 @@
 
     .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
 
-    /* --- Name row with traits on sides --- */
+    /* ======= NAME + TRAITS ROW =======
+       Middle column is FIXED width -> M/S text never shifts.
+       Side columns are flexible.
+    */
     .name-row {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 10px;
+      grid-template-columns: 1fr var(--ms-width) 1fr;
       align-items: center;
+      column-gap: 10px;
       margin-bottom: 12px;
-      /* Allow height to grow ONLY if needed (2 rows of traits max is fine) */
-      min-height: 34px;
     }
 
     .name {
+      width: var(--ms-width);
+      text-align: center;
       font-size: 19px;
       font-weight: 800;
       white-space: nowrap;
       line-height: 1;
+      justify-self: center;
     }
 
-    /* NEW: 3 per row max, then wrap down */
+    /* Traits: 2 per row max, then wrap down */
     .traits {
       display: grid;
-      grid-template-columns: repeat(3, var(--trait-size));
+      grid-template-columns: repeat(2, var(--trait-size));
       grid-auto-rows: var(--trait-size);
       gap: 4px;
       align-content: center;
-      justify-content: center;
-      min-height: var(--trait-size);
+
+      /* IMPORTANT: keep the trait block glued to the text */
+      justify-content: end;
     }
 
-    /* Align blocks towards the center text */
-    .traits.left { justify-content: end; }
-    .traits.right { justify-content: start; }
+    .traits.right {
+      justify-content: start;
+    }
 
     .trait-icon {
       width: var(--trait-size);
@@ -94,7 +99,7 @@
       display: block;
     }
 
-    /* Hide broken icons so you don't see white broken boxes */
+    /* Hide broken icons so you don't see white broken placeholders */
     .trait-icon.is-broken { display: none !important; }
 
     .price {
@@ -191,10 +196,9 @@
       return url + "/revision/latest?cb=1";
     }
 
-    /* Balanced split:
-       - max 22 total
-       - split evenly (8 -> 4/4)
-       - each side will wrap naturally to 3-per-row grid
+    /* Balanced split (max 22):
+       - even split left/right
+       - each side uses 2-per-row grid automatically (2 then next row)
     */
     function splitTraitsEven(traits) {
       const clean = (traits || []).filter(Boolean).slice(0, 22);
