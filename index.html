@@ -1,268 +1,199 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FUELLING SHOP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FUELLING SHOP</title>
 
-  <style>
-    :root {
-      --card-bg: rgba(20, 20, 25, 0.95);
-      --accent: #00f2ea;
-      --price-color: #ffd700;
+<style>
+:root{
+  --card-bg: rgba(20,20,25,.95);
+  --accent:#00f2ea;
+  --price-color:#ffd700;
 
-      --trait-size: 18px; /* icon size */
-      --ms-width: 92px;   /* fixed width for the M/S text column (keeps it centered always) */
-    }
+  --trait-size:18px;
+  --ms-top:165px;      /* LOCKED vertical position for M/S */
+  --price-top:210px;   /* LOCKED vertical position for price */
+}
 
-    body, html {
-      margin: 0; padding: 0; width: 100%; height: 100%;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #050505; color: white; overflow-x: hidden;
-    }
+body{
+  margin:0;
+  background:#050505;
+  color:#fff;
+  font-family:'Segoe UI',system-ui,sans-serif;
+}
 
-    .shop-container { width: 100vw; padding: 40px 20px; box-sizing: border-box; min-height: 100vh; }
+.shop-container{
+  padding:40px 20px;
+}
 
-    h1 {
-      font-size: 40px; text-align: center; color: var(--accent);
-      margin: 0 0 40px 0; text-shadow: 0 0 15px var(--accent);
-      font-weight: 900; letter-spacing: 2px;
-    }
+h1{
+  text-align:center;
+  color:var(--accent);
+  font-size:40px;
+  margin-bottom:40px;
+  text-shadow:0 0 15px var(--accent);
+}
 
-    .grid {
-      display: flex; flex-wrap: wrap; gap: 20px;
-      justify-content: center; max-width: 1400px; margin: 0 auto;
-    }
+.grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:20px;
+  justify-content:center;
+}
 
-    .card {
-      background: var(--card-bg); border-radius: 12px; padding: 18px;
-      text-align: center; position: relative; width: 200px;
-      border: 2px solid #ffffff;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-      transition: transform 0.2s;
-    }
+/* ===== CARD ===== */
+.card{
+  width:200px;
+  min-height:260px;
+  background:var(--card-bg);
+  border-radius:12px;
+  border:2px solid white;
+  box-shadow:0 0 20px rgba(255,255,255,.4);
+  position:relative;
+  padding-top:14px;
+}
 
-    .img-box {
-      width: 100%; height: 120px; background: rgba(255,255,255,0.05);
-      border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
-      overflow: hidden;
-    }
+/* IMAGE */
+.img-box{
+  height:120px;
+  margin:0 18px;
+  background:rgba(255,255,255,.05);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-    .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
+.img-box img{
+  max-width:95%;
+  max-height:95%;
+}
 
-    /* ======= NAME + TRAITS ROW =======
-       Middle column is FIXED width -> M/S text never shifts.
-       Side columns are flexible.
-    */
-    .name-row {
-      display: grid;
-      grid-template-columns: 1fr var(--ms-width) 1fr;
-      align-items: center;
-      column-gap: 10px;
-      margin-bottom: 12px;
-    }
+/* ===== TRAITS (FREE FLOATING) ===== */
+.traits{
+  position:absolute;
+  top:145px;
+  display:grid;
+  grid-template-columns:repeat(2,var(--trait-size));
+  gap:4px;
+}
 
-    .name {
-      width: var(--ms-width);
-      text-align: center;
-      font-size: 19px;
-      font-weight: 800;
-      white-space: nowrap;
-      line-height: 1;
-      justify-self: center;
-    }
+.traits.left{ left:14px; }
+.traits.right{ right:14px; }
 
-    /* Traits: 2 per row max, then wrap down */
-    .traits {
-      display: grid;
-      grid-template-columns: repeat(2, var(--trait-size));
-      grid-auto-rows: var(--trait-size);
-      gap: 4px;
-      align-content: center;
+.trait-icon{
+  width:var(--trait-size);
+  height:var(--trait-size);
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.06);
+  object-fit:cover;
+}
 
-      /* IMPORTANT: keep the trait block glued to the text */
-      justify-content: end;
-    }
+.trait-icon.is-broken{ display:none; }
 
-    .traits.right {
-      justify-content: start;
-    }
+/* ===== LOCKED TEXT ===== */
+.name{
+  position:absolute;
+  top:var(--ms-top);
+  left:50%;
+  transform:translateX(-50%);
+  font-weight:800;
+  font-size:19px;
+  white-space:nowrap;
+}
 
-    .trait-icon {
-      width: var(--trait-size);
-      height: var(--trait-size);
-      border-radius: 4px;
-      object-fit: cover;
-      border: 1px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.06);
-      box-shadow: 0 0 8px rgba(255,255,255,0.08);
-      display: block;
-    }
+/* ===== LOCKED PRICE ===== */
+.price{
+  position:absolute;
+  top:var(--price-top);
+  left:50%;
+  transform:translateX(-50%);
+  color:var(--price-color);
+  font-weight:bold;
+  border:1.5px solid var(--price-color);
+  padding:4px 15px;
+  border-radius:6px;
+}
 
-    /* Hide broken icons so you don't see white broken placeholders */
-    .trait-icon.is-broken { display: none !important; }
-
-    .price {
-      font-size: 17px; color: var(--price-color); font-weight: bold;
-      border: 1.5px solid var(--price-color); padding: 4px 15px;
-      border-radius: 6px; display: inline-block; background: rgba(0,0,0,0.3);
-    }
-
-    /* Colors */
-    .card.GOLD { border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-    .card.DIAMOND { border-color: #1A82FF; box-shadow: 0 0 20px rgba(26, 130, 255, 0.6); }
-    .card.GALAXY { border-color: #ff00ff; box-shadow: 0 0 20px rgba(255, 0, 255, 0.6); }
-    .card.CANDY { border-color: #ff69b4; box-shadow: 0 0 20px rgba(255, 105, 180, 0.6); }
-    .card.RADIOACTIVE { border-color: #39ff14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.7); }
-    .card.BLOODROT { border-color: #ff0000; box-shadow: 0 0 20px rgba(255, 0, 0, 0.7); }
-    .card.YING_YANG { border-color: #ffffff; box-shadow: 0 0 25px rgba(255, 255, 255, 0.5), inset 0 0 10px rgba(0,0,0,0.8); }
-
-    .card.RAINBOW {
-      border: 2px solid transparent;
-      background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-                  linear-gradient(45deg, red, orange, yellow, green, blue, purple) border-box;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-    }
-
-    /* Delete button */
-    .delete-btn {
-      position: absolute; top: -10px; left: -10px; background: #ff4d4d;
-      color: white; border: 2px solid white; border-radius: 50%;
-      width: 28px; height: 28px; font-weight: bold; cursor: pointer;
-      display: none; z-index: 10;
-    }
-    .card:hover .delete-btn { display: flex; align-items: center; justify-content: center; }
-
-    .removing { animation: shrink 0.3s forwards; }
-    @keyframes shrink { to { transform: scale(0); opacity: 0; } }
-  </style>
+/* COLORS */
+.card.GOLD{ border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,.6); }
+.card.RAINBOW{
+  border:2px solid transparent;
+  background:
+    linear-gradient(var(--card-bg),var(--card-bg)) padding-box,
+    linear-gradient(45deg,red,orange,yellow,green,blue,purple) border-box;
+}
+</style>
 </head>
 
 <body>
-  <div class="shop-container">
-    <h1>FUELLING SHOP</h1>
-    <div class="grid" id="mainGrid"></div>
+<div class="shop-container">
+  <h1>FUELLING SHOP</h1>
+  <div class="grid" id="mainGrid"></div>
+</div>
+
+<script>
+const TRAIT_ICONS={
+  Taco:"https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
+  UFO:"https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
+  Spider:"https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
+  Star:"https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
+  Fire:"https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
+  Glitch:"https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png"
+};
+
+const myItems=[
+  {
+    n:"506.2M/S",
+    p:"85₪",
+    img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png",
+    c:"RAINBOW",
+    t:["Taco","UFO","Spider","Star","Fire","Glitch","Taco","UFO"]
+  },
+  {
+    n:"585M/S",
+    p:"80₪",
+    img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png",
+    t:[]
+  }
+];
+
+function cache(u){ return u+"?cb="+Date.now(); }
+
+function splitEven(arr){
+  const m=Math.ceil(arr.length/2);
+  return{l:arr.slice(0,m),r:arr.slice(m)};
+}
+
+function traitsHTML(list){
+  return list.map(t=>{
+    const u=TRAIT_ICONS[t];
+    if(!u) return "";
+    return `<img class="trait-icon" src="${cache(u)}"
+      onerror="this.classList.add('is-broken')">`;
+  }).join("");
+}
+
+const grid=document.getElementById("mainGrid");
+
+grid.innerHTML=myItems.map(i=>{
+  const s=splitEven(i.t||[]);
+  return `
+  <div class="card ${i.c||""}">
+    <div class="img-box">
+      <img src="${cache(i.img)}" onerror="this.style.display='none'">
+    </div>
+
+    <div class="traits left">${traitsHTML(s.l)}</div>
+    <div class="traits right">${traitsHTML(s.r)}</div>
+
+    <div class="name">${i.n}</div>
+    <div class="price">${i.p}</div>
   </div>
-
-  <script>
-    const TRAIT_ICONS = {
-      Taco: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
-      UFO: "https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
-      Spider: "https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
-      Star: "https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
-      LaVaca: "https://static.wikia.nocookie.net/stealabr/images/c/cb/Comet2.png",
-      Fire: "https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
-      Bombardilo: "https://static.wikia.nocookie.net/stealabr/images/4/4c/Bombardiro.png",
-      Matteo: "https://static.wikia.nocookie.net/stealabr/images/d/d3/MatteoHat.png",
-      LaChucaracha: "https://static.wikia.nocookie.net/stealabr/images/f/f5/Mexico_Hat.png",
-      Rip: "https://static.wikia.nocookie.net/stealabr/images/7/75/GraveYard-RIP-Tombstone.png",
-      Indonesia: "https://static.wikia.nocookie.net/stealabr/images/6/61/Indonesian.png",
-      Glitch: "https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png",
-      Crab: "https://static.wikia.nocookie.net/stealabr/images/f/f6/CrabClaw.png",
-      NyanCat: "https://static.wikia.nocookie.net/stealabr/images/9/92/Nyan.png",
-      Brazil: "https://static.wikia.nocookie.net/stealabr/images/8/8c/Brazil.png",
-      Reindeer: "https://static.wikia.nocookie.net/stealabr/images/2/24/Reindeer.png",
-      Paint: "https://static.wikia.nocookie.net/stealabr/images/2/28/Chicleteirabicicleteira.png",
-      "26": "https://static.wikia.nocookie.net/stealabr/images/a/a7/2026Trait.png",
-      Firework: "https://static.wikia.nocookie.net/stealabr/images/6/62/Fireworks.png",
-      Skibidi: "https://static.wikia.nocookie.net/stealabr/images/7/7b/SkibidiIcon.png",
-      Meowl: "https://static.wikia.nocookie.net/stealabr/images/f/f9/ICON_Meowl.png",
-      Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png"
-    };
-
-    const myItems = [
-      { n: "382.5M/S", p: "75₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c: "CANDY", t: ["Taco","UFO","Spider","Star","Fire"] },
-      { n: "637.5M/S", p: "95₪", img: "https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c: "GOLD", t: ["Glitch","Crab","NyanCat","Brazil","Reindeer","Paint"] },
-      { n: "585M/S", p: "80₪", img: "https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t: [] },
-      { n: "506.2M/S", p: "85₪", img: "https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png", c: "RADIOACTIVE", t: ["Indonesia","Firework","Skibidi","Meowl","Strawberry","Rip","LaVaca","Matteo","Bombardilo","LaChucaracha","Star","UFO","Taco","Spider"] },
-      { n: "62.5M/S", p: "40₪", img: "https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c: "GOLD", t: ["26"] },
-      { n: "210M/S", p: "30₪", img: "https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t: ["Fire","Bombardilo"] },
-      { n: "840M/S", p: "85₪", img: "https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", c: "RAINBOW", t: ["Glitch","Glitch","Glitch"] },
-      { n: "200M/S", p: "70₪", img: "", t: ["Taco"] },
-      { n: "45M/S", p: "25₪", img: "", c: "GOLD", t: [] },
-      { n: "840M/S", p: "60₪", img: "", c: "RAINBOW", t: ["Star","UFO","Spider","Crab","NyanCat","Brazil","Reindeer","Paint","Firework","Skibidi","Meowl","Strawberry"] },
-      { n: "250M/S", p: "23₪", img: "", c: "GOLD", t: ["LaVaca","Fire","Rip"] },
-      { n: "280M/S", p: "40₪", img: "", c: "GOLD", t: ["Matteo","LaChucaracha"] },
-      { n: "276M/S", p: "40₪", img: "", c: "GALAXY", t: ["Glitch","UFO"] },
-      { n: "253M/S", p: "35₪", img: "", c: "GALAXY", t: ["Crab"] },
-      { n: "100M/S", p: "79₪", img: "", t: ["Taco","UFO","Spider","Star","LaVaca","Fire","Bombardilo","Matteo","LaChucaracha","Rip","Indonesia","Glitch","Crab","NyanCat","Brazil","Reindeer","Paint","26","Firework","Skibidi","Meowl","Strawberry"] },
-    ];
-
-    const grid = document.getElementById("mainGrid");
-
-    function fixWikia(url) {
-      if (!url) return "";
-      if (url.includes("/revision/latest")) return url;
-      return url + "/revision/latest?cb=1";
-    }
-
-    /* Balanced split (max 22):
-       - even split left/right
-       - each side uses 2-per-row grid automatically (2 then next row)
-    */
-    function splitTraitsEven(traits) {
-      const clean = (traits || []).filter(Boolean).slice(0, 22);
-      const n = clean.length;
-      const leftCount = Math.ceil(n / 2);
-      return {
-        left: clean.slice(0, leftCount),
-        right: clean.slice(leftCount)
-      };
-    }
-
-    function traitsHtml(traitList) {
-      if (!traitList || traitList.length === 0) return "";
-      return traitList.map(name => {
-        const url = fixWikia(TRAIT_ICONS[name] || "");
-        if (!url) return "";
-        return `<img class="trait-icon"
-                     src="${url}"
-                     alt="${name}"
-                     title="${name}"
-                     loading="lazy"
-                     decoding="async"
-                     onerror="this.classList.add('is-broken');" />`;
-      }).join("");
-    }
-
-    function renderShop() {
-      grid.innerHTML = myItems.map((item, index) => {
-        const colorClass = item.c ? item.c : "DEFAULT";
-        const parts = splitTraitsEven(item.t);
-
-        const imgSrc = item.img && item.img.trim()
-          ? fixWikia(item.img)
-          : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='140'%3E%3Crect width='100%25' height='100%25' fill='%23111111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaaaaa' font-family='Segoe UI' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
-
-        return `
-          <div class="card ${colorClass}" id="unit-${index}">
-            <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
-
-            <div class="img-box">
-              <img src="${imgSrc}" alt="unit" loading="lazy" decoding="async" />
-            </div>
-
-            <div class="name-row">
-              <div class="traits left">${traitsHtml(parts.left)}</div>
-              <div class="name">${item.n}</div>
-              <div class="traits right">${traitsHtml(parts.right)}</div>
-            </div>
-
-            <div class="price">${item.p}</div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    function removeUnit(index) {
-      const card = document.getElementById(`unit-${index}`);
-      if (card) {
-        card.classList.add("removing");
-        setTimeout(() => card.remove(), 300);
-      }
-    }
-
-    renderShop();
-  </script>
+  `;
+}).join("");
+</script>
 </body>
 </html>
