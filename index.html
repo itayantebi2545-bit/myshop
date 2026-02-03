@@ -66,11 +66,13 @@ h1{
   display:flex;
   align-items:center;
   justify-content:center;
+  overflow:hidden;
 }
 
 .img-box img{
   max-width:95%;
   max-height:95%;
+  object-fit:contain;
 }
 
 /* TRAITS */
@@ -120,9 +122,13 @@ h1{
   border-radius:6px;
 }
 
-/* COLORS */
+/* COLORS (optional but nice) */
 .card.GOLD{ border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,.6); }
 .card.CANDY{ border-color:#ff69b4; box-shadow:0 0 20px rgba(255,105,180,.6); }
+.card.RADIOACTIVE{ border-color:#39ff14; box-shadow:0 0 20px rgba(57,255,20,.7); }
+.card.GALAXY{ border-color:#ff00ff; box-shadow:0 0 20px rgba(255,0,255,.6); }
+.card.DIAMOND{ border-color:#1A82FF; box-shadow:0 0 20px rgba(26,130,255,.6); }
+.card.BLOODROT{ border-color:#ff0000; box-shadow:0 0 20px rgba(255,0,0,.7); }
 .card.RAINBOW{
   border:2px solid transparent;
   background:
@@ -140,7 +146,7 @@ h1{
 
 <script>
 /* TRAITS */
-const TRAIT_ICONS={
+const TRAIT_ICONS = {
   Taco: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
   UFO: "https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
   Spider: "https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
@@ -165,55 +171,66 @@ const TRAIT_ICONS={
   Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png"
 };
 
-/* ITEMS – ADD AS MANY AS YOU WANT */
-const myItems=[
+/* ITEMS – FIXED (COMMAs ADDED) */
+const myItems = [
   { n:"382.5M/S", p:"75₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"CANDY", t:["Taco","UFO"] },
   { n:"637.5M/S", p:"95₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c:"GOLD", t:["Glitch","Crab"] },
   { n:"585M/S", p:"80₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t:[] },
   { n:"506.2M/S", p:"85₪", img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png", c:"RAINBOW", t:["NyanCat"] },
   { n:"62.5M/S", p:"40₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD", t:["Taco"] },
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
+
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
   { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
 ];
 
 /* HELPERS */
-function cache(u){ return u+"?cb="+Date.now(); }
+function cache(u){
+  if(!u) return "";
+  const joiner = u.includes("?") ? "&" : "?";
+  return u + joiner + "cb=" + Date.now();
+}
 
 function splitEven(arr){
-  const mid=Math.ceil(arr.length/2);
-  return{l:arr.slice(0,mid),r:arr.slice(mid)};
+  const a = (arr || []).slice(0, 22);
+  const mid = Math.ceil(a.length / 2);
+  return { l: a.slice(0, mid), r: a.slice(mid) };
 }
 
 function traitsHTML(list){
-  return list.map(t=>{
-    const u=TRAIT_ICONS[t];
+  return (list || []).map(t => {
+    const u = TRAIT_ICONS[t];
     if(!u) return "";
     return `<img class="trait-icon" src="${cache(u)}"
+      referrerpolicy="no-referrer"
       onerror="this.classList.add('is-broken')">`;
   }).join("");
 }
 
 /* RENDER */
-const grid=document.getElementById("mainGrid");
-grid.innerHTML=myItems.map(i=>{
-  const s=splitEven(i.t||[]);
+const grid = document.getElementById("mainGrid");
+grid.innerHTML = myItems.map(i => {
+  const s = splitEven(i.t || []);
+  const cardClass = i.c ? i.c : "";
+
   return `
-  <div class="card ${i.c||""}">
-    <div class="img-box">
-      <img src="${cache(i.img)}" onerror="this.style.display='none'">
+    <div class="card ${cardClass}">
+      <div class="img-box">
+        <img src="${cache(i.img)}"
+             referrerpolicy="no-referrer"
+             onerror="this.style.display='none'">
+      </div>
+
+      <div class="traits left">${traitsHTML(s.l)}</div>
+      <div class="traits right">${traitsHTML(s.r)}</div>
+
+      <div class="name">${i.n}</div>
+      <div class="price">${i.p}</div>
     </div>
-
-    <div class="traits left">${traitsHTML(s.l)}</div>
-    <div class="traits right">${traitsHTML(s.r)}</div>
-
-    <div class="name">${i.n}</div>
-    <div class="price">${i.p}</div>
-  </div>
   `;
 }).join("");
 </script>
