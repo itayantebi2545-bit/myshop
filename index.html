@@ -12,8 +12,10 @@
   --price-color:#ffd700;
 
   --trait-size:18px;
-  --ms-top:165px;      /* LOCKED vertical position for M/S */
-  --price-top:210px;   /* LOCKED vertical position for price */
+
+  /* LOCKED POSITIONS */
+  --ms-top:165px;
+  --price-top:210px;
 }
 
 body{
@@ -35,14 +37,15 @@ h1{
   text-shadow:0 0 15px var(--accent);
 }
 
+/* ✅ 4 CARDS PER ROW */
 .grid{
-  display:flex;
-  flex-wrap:wrap;
+  display:grid;
+  grid-template-columns:repeat(4,200px);
   gap:20px;
   justify-content:center;
 }
 
-/* ===== CARD ===== */
+/* CARD */
 .card{
   width:200px;
   min-height:260px;
@@ -70,7 +73,7 @@ h1{
   max-height:95%;
 }
 
-/* ===== TRAITS (FREE FLOATING) ===== */
+/* TRAITS */
 .traits{
   position:absolute;
   top:145px;
@@ -93,7 +96,7 @@ h1{
 
 .trait-icon.is-broken{ display:none; }
 
-/* ===== LOCKED TEXT ===== */
+/* LOCKED TEXT */
 .name{
   position:absolute;
   top:var(--ms-top);
@@ -104,7 +107,7 @@ h1{
   white-space:nowrap;
 }
 
-/* ===== LOCKED PRICE ===== */
+/* LOCKED PRICE */
 .price{
   position:absolute;
   top:var(--price-top);
@@ -119,6 +122,7 @@ h1{
 
 /* COLORS */
 .card.GOLD{ border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,.6); }
+.card.CANDY{ border-color:#ff69b4; box-shadow:0 0 20px rgba(255,105,180,.6); }
 .card.RAINBOW{
   border:2px solid transparent;
   background:
@@ -135,36 +139,33 @@ h1{
 </div>
 
 <script>
+/* TRAITS */
 const TRAIT_ICONS={
   Taco:"https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
   UFO:"https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
   Spider:"https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
   Star:"https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
   Fire:"https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
-  Glitch:"https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png"
+  Glitch:"https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png",
+  Crab:"https://static.wikia.nocookie.net/stealabr/images/f/f6/CrabClaw.png"
 };
 
+/* ITEMS – ADD AS MANY AS YOU WANT */
 const myItems=[
-  {
-    n:"506.2M/S",
-    p:"85₪",
-    img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png",
-    c:"RAINBOW",
-    t:["Taco","UFO","Spider","Star","Fire","Glitch","Taco","UFO"]
-  },
-  {
-    n:"585M/S",
-    p:"80₪",
-    img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png",
-    t:[]
-  }
+  { n:"382.5M/S", p:"75₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"CANDY", t:["Taco","UFO"] },
+  { n:"637.5M/S", p:"95₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c:"GOLD", t:["Glitch","Crab"] },
+  { n:"585M/S", p:"80₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t:[] },
+  { n:"506.2M/S", p:"85₪", img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png", c:"RAINBOW", t:["Taco","UFO","Spider","Star","Fire","Glitch"] },
+  { n:"62.5M/S", p:"40₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD", t:["Taco"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
 ];
 
+/* HELPERS */
 function cache(u){ return u+"?cb="+Date.now(); }
 
 function splitEven(arr){
-  const m=Math.ceil(arr.length/2);
-  return{l:arr.slice(0,m),r:arr.slice(m)};
+  const mid=Math.ceil(arr.length/2);
+  return{l:arr.slice(0,mid),r:arr.slice(mid)};
 }
 
 function traitsHTML(list){
@@ -176,8 +177,8 @@ function traitsHTML(list){
   }).join("");
 }
 
+/* RENDER */
 const grid=document.getElementById("mainGrid");
-
 grid.innerHTML=myItems.map(i=>{
   const s=splitEven(i.t||[]);
   return `
