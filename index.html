@@ -37,10 +37,10 @@ h1{
   text-shadow:0 0 15px var(--accent);
 }
 
-/* ✅ 4 CARDS PER ROW */
+/* ✅ FIXED: AUTO-CENTER AFTER DELETE (still 4 per row when possible) */
 .grid{
   display:grid;
-  grid-template-columns:repeat(4,200px);
+  grid-template-columns: repeat(auto-fit, 200px); /* <-- THIS IS THE FIX */
   gap:20px;
   justify-content:center;
 }
@@ -58,7 +58,7 @@ h1{
   overflow:visible;
 }
 
-/* ===== NEW: HOVER DELETE BUTTON ===== */
+/* ===== HOVER DELETE BUTTON ===== */
 .delete-btn{
   position:absolute;
   top:-10px;
@@ -81,7 +81,7 @@ h1{
   display:block;
 }
 
-/* ===== NEW: FLY-AWAY ANIMATION ===== */
+/* ===== FLY-AWAY ANIMATION ===== */
 .card.removing{
   animation: flyAway .35s ease forwards;
   pointer-events:none;
@@ -208,14 +208,11 @@ const TRAIT_ICONS = {
   Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png"
 };
 
-/* ITEMS */
+/* ITEMS (PUT YOUR FULL LIST HERE) */
 const myItems = [
-  { n:"382.5M/S", p:"75₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"CANDY", t:["Taco","UFO"] },
-  { n:"637.5M/S", p:"95₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c:"GOLD", t:["Glitch","Crab"] },
-  { n:"585M/S", p:"80₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t:[] },
-  { n:"506.2M/S", p:"85₪", img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png", c:"RAINBOW", t:["NyanCat"] },
+  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] },
   { n:"62.5M/S", p:"40₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD", t:["Taco"] },
-  { n:"210M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/a/ac/KetupatKepat.png", t:["Fire","Crab"] }
+  { n:"506.2M/S", p:"85₪", img:"https://static.wikia.nocookie.net/stealabr/images/0/0d/Tictac_sahur.png", c:"RAINBOW", t:["NyanCat"] }
 ];
 
 /* HELPERS */
@@ -241,14 +238,12 @@ function traitsHTML(list){
   }).join("");
 }
 
-/* ===== NEW: REMOVE TAB FUNCTION ===== */
+/* REMOVE CARD */
 function removeCard(index){
   const card = document.getElementById(`card-${index}`);
   if(!card) return;
   card.classList.add("removing");
-  setTimeout(() => {
-    card.remove();
-  }, 350);
+  setTimeout(() => card.remove(), 350);
 }
 
 /* RENDER */
@@ -259,7 +254,7 @@ grid.innerHTML = myItems.map((i, idx) => {
 
   return `
     <div class="card ${cardClass}" id="card-${idx}">
-      <button class="delete-btn" onclick="removeCard(${idx})">✕</button>
+      <button class="delete-btn" type="button" onclick="removeCard(${idx})">✕</button>
 
       <div class="img-box">
         <img src="${cache(i.img)}"
