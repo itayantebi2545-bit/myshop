@@ -11,9 +11,8 @@
       --accent: #00f2ea;
       --price-color: #ffd700;
 
-      /* NEW trait tuning */
-      --trait-size: 16px;      /* icon size */
-      --trait-overlap: 7px;    /* how much they overlap */
+      /* Trait size */
+      --trait-size: 18px;
     }
 
     body, html {
@@ -45,20 +44,21 @@
 
     .img-box {
       width: 100%; height: 120px; background: rgba(255,255,255,0.05);
-      border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
       overflow: hidden;
     }
 
     .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
 
-    /* Name row: traits left + M/S + traits right */
+    /* --- Name row with traits on sides --- */
     .name-row {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       gap: 10px;
       align-items: center;
       margin-bottom: 12px;
-      min-height: 32px; /* stable height (no stretching) */
+      /* Allow height to grow ONLY if needed (2 rows of traits max is fine) */
+      min-height: 34px;
     }
 
     .name {
@@ -68,17 +68,20 @@
       line-height: 1;
     }
 
-    /* NEW: single-row, no-wrap, overlapping icons so it never stretches */
+    /* NEW: 3 per row max, then wrap down */
     .traits {
-      display: flex;
-      align-items: center;
-      flex-wrap: nowrap;     /* IMPORTANT: no wrapping */
-      overflow: hidden;      /* keeps it clean */
+      display: grid;
+      grid-template-columns: repeat(3, var(--trait-size));
+      grid-auto-rows: var(--trait-size);
+      gap: 4px;
+      align-content: center;
+      justify-content: center;
       min-height: var(--trait-size);
     }
 
-    .traits.left { justify-content: flex-end; }
-    .traits.right { justify-content: flex-start; }
+    /* Align blocks towards the center text */
+    .traits.left { justify-content: end; }
+    .traits.right { justify-content: start; }
 
     .trait-icon {
       width: var(--trait-size);
@@ -88,20 +91,11 @@
       border: 1px solid rgba(255,255,255,0.25);
       background: rgba(255,255,255,0.06);
       box-shadow: 0 0 8px rgba(255,255,255,0.08);
-      flex: 0 0 auto;
+      display: block;
     }
 
-    /* overlap effect so up to 11 fits without wrapping */
-    .traits .trait-icon:not(:first-child),
-    .traits .trait-icon + span.trait-icon,
-    .traits span.trait-icon:not(:first-child) {
-      margin-inline-start: calc(-1 * var(--trait-overlap));
-    }
-
-    /* placeholder square if a trait has no icon url */
-    span.trait-icon {
-      display: inline-block;
-    }
+    /* Hide broken icons so you don't see white broken boxes */
+    .trait-icon.is-broken { display: none !important; }
 
     .price {
       font-size: 17px; color: var(--price-color); font-weight: bold;
@@ -125,6 +119,7 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
     }
 
+    /* Delete button */
     .delete-btn {
       position: absolute; top: -10px; left: -10px; background: #ff4d4d;
       color: white; border: 2px solid white; border-radius: 50%;
@@ -196,28 +191,33 @@
       return url + "/revision/latest?cb=1";
     }
 
-    /* NEW: balanced split (even sides), max 22 traits total, max 11 each side */
+    /* Balanced split:
+       - max 22 total
+       - split evenly (8 -> 4/4)
+       - each side will wrap naturally to 3-per-row grid
+    */
     function splitTraitsEven(traits) {
       const clean = (traits || []).filter(Boolean).slice(0, 22);
-
       const n = clean.length;
-      const leftCount = Math.min(11, Math.ceil(n / 2));  // 6 -> 3, 15 -> 8
-      const rightCount = Math.min(11, n - leftCount);
-
+      const leftCount = Math.ceil(n / 2);
       return {
         left: clean.slice(0, leftCount),
-        right: clean.slice(leftCount, leftCount + rightCount)
+        right: clean.slice(leftCount)
       };
     }
 
     function traitsHtml(traitList) {
       if (!traitList || traitList.length === 0) return "";
       return traitList.map(name => {
-        const raw = TRAIT_ICONS[name] || "";
-        const url = fixWikia(raw);
-
-        if (!url) return `<span class="trait-icon" title="${name}"></span>`;
-        return `<img class="trait-icon" src="${url}" alt="${name}" title="${name}" loading="lazy" />`;
+        const url = fixWikia(TRAIT_ICONS[name] || "");
+        if (!url) return "";
+        return `<img class="trait-icon"
+                     src="${url}"
+                     alt="${name}"
+                     title="${name}"
+                     loading="lazy"
+                     decoding="async"
+                     onerror="this.classList.add('is-broken');" />`;
       }).join("");
     }
 
@@ -235,7 +235,7 @@
             <button class="delete-btn" onclick="removeUnit(${index})">✕</button>
 
             <div class="img-box">
-              <img src="${imgSrc}" alt="unit" />
+              <img src="${imgSrc}" alt="unit" loading="lazy" decoding="async" />
             </div>
 
             <div class="name-row">
