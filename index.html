@@ -10,6 +10,10 @@
       --card-bg: rgba(20, 20, 25, 0.95);
       --accent: #00f2ea;
       --price-color: #ffd700;
+
+      /* NEW trait tuning */
+      --trait-size: 16px;      /* icon size */
+      --trait-overlap: 7px;    /* how much they overlap */
     }
 
     body, html {
@@ -31,7 +35,6 @@
       justify-content: center; max-width: 1400px; margin: 0 auto;
     }
 
-    /* Card */
     .card {
       background: var(--card-bg); border-radius: 12px; padding: 18px;
       text-align: center; position: relative; width: 200px;
@@ -48,41 +51,56 @@
 
     .img-box img { max-width: 95%; max-height: 95%; object-fit: contain; }
 
-    /* --- NEW: name row with traits on sides --- */
+    /* Name row: traits left + M/S + traits right */
     .name-row {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       gap: 10px;
       align-items: center;
       margin-bottom: 12px;
-      min-height: 34px;
+      min-height: 32px; /* stable height (no stretching) */
     }
 
     .name {
       font-size: 19px;
       font-weight: 800;
       white-space: nowrap;
+      line-height: 1;
     }
 
+    /* NEW: single-row, no-wrap, overlapping icons so it never stretches */
     .traits {
       display: flex;
-      gap: 4px;
       align-items: center;
-      flex-wrap: wrap;
-      min-height: 24px;
+      flex-wrap: nowrap;     /* IMPORTANT: no wrapping */
+      overflow: hidden;      /* keeps it clean */
+      min-height: var(--trait-size);
     }
 
     .traits.left { justify-content: flex-end; }
     .traits.right { justify-content: flex-start; }
 
     .trait-icon {
-      width: 18px;
-      height: 18px;
+      width: var(--trait-size);
+      height: var(--trait-size);
       border-radius: 4px;
       object-fit: cover;
       border: 1px solid rgba(255,255,255,0.25);
       background: rgba(255,255,255,0.06);
       box-shadow: 0 0 8px rgba(255,255,255,0.08);
+      flex: 0 0 auto;
+    }
+
+    /* overlap effect so up to 11 fits without wrapping */
+    .traits .trait-icon:not(:first-child),
+    .traits .trait-icon + span.trait-icon,
+    .traits span.trait-icon:not(:first-child) {
+      margin-inline-start: calc(-1 * var(--trait-overlap));
+    }
+
+    /* placeholder square if a trait has no icon url */
+    span.trait-icon {
+      display: inline-block;
     }
 
     .price {
@@ -107,7 +125,6 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
     }
 
-    /* Delete button */
     .delete-btn {
       position: absolute; top: -10px; left: -10px; background: #ff4d4d;
       color: white; border: 2px solid white; border-radius: 50%;
@@ -128,41 +145,30 @@
   </div>
 
   <script>
-    /* =========================
-       1) TRAITS ICONS (YOU EDIT)
-       Put your image links here.
-       ========================= */
-
     const TRAIT_ICONS = {
-  Taco: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
-  UFO: "https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
-  Spider: "https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
-  Star: "https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
-  LaVaca: "https://static.wikia.nocookie.net/stealabr/images/c/cb/Comet2.png",
-  Fire: "https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
-  Bombardilo: "https://static.wikia.nocookie.net/stealabr/images/4/4c/Bombardiro.png",
-  Matteo: "https://static.wikia.nocookie.net/stealabr/images/d/d3/MatteoHat.png",
-  LaChucaracha: "https://static.wikia.nocookie.net/stealabr/images/f/f5/Mexico_Hat.png",
-  Rip: "https://static.wikia.nocookie.net/stealabr/images/7/75/GraveYard-RIP-Tombstone.png",
-  Indonesia: "https://static.wikia.nocookie.net/stealabr/images/6/61/Indonesian.png",
-  Glitch: "https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png",
-  Crab: "https://static.wikia.nocookie.net/stealabr/images/f/f6/CrabClaw.png",
-  NyanCat: "https://static.wikia.nocookie.net/stealabr/images/9/92/Nyan.png",
-  Brazil: "https://static.wikia.nocookie.net/stealabr/images/8/8c/Brazil.png",
-  Reindeer: "https://static.wikia.nocookie.net/stealabr/images/2/24/Reindeer.png",
-  Paint: "https://static.wikia.nocookie.net/stealabr/images/2/28/Chicleteirabicicleteira.png",
-  "26": "https://static.wikia.nocookie.net/stealabr/images/a/a7/2026Trait.png",
-  Firework: "https://static.wikia.nocookie.net/stealabr/images/6/62/Fireworks.png",
-  Skibidi: "https://static.wikia.nocookie.net/stealabr/images/7/7b/SkibidiIcon.png",
-  Meowl: "https://static.wikia.nocookie.net/stealabr/images/f/f9/ICON_Meowl.png",
-  Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png"
-};
-
-    /* =========================
-       2) YOUR ITEMS (ADD t: [])
-       t = list of trait names
-       Max 22 traits per item
-       ========================= */
+      Taco: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
+      UFO: "https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
+      Spider: "https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
+      Star: "https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
+      LaVaca: "https://static.wikia.nocookie.net/stealabr/images/c/cb/Comet2.png",
+      Fire: "https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
+      Bombardilo: "https://static.wikia.nocookie.net/stealabr/images/4/4c/Bombardiro.png",
+      Matteo: "https://static.wikia.nocookie.net/stealabr/images/d/d3/MatteoHat.png",
+      LaChucaracha: "https://static.wikia.nocookie.net/stealabr/images/f/f5/Mexico_Hat.png",
+      Rip: "https://static.wikia.nocookie.net/stealabr/images/7/75/GraveYard-RIP-Tombstone.png",
+      Indonesia: "https://static.wikia.nocookie.net/stealabr/images/6/61/Indonesian.png",
+      Glitch: "https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png",
+      Crab: "https://static.wikia.nocookie.net/stealabr/images/f/f6/CrabClaw.png",
+      NyanCat: "https://static.wikia.nocookie.net/stealabr/images/9/92/Nyan.png",
+      Brazil: "https://static.wikia.nocookie.net/stealabr/images/8/8c/Brazil.png",
+      Reindeer: "https://static.wikia.nocookie.net/stealabr/images/2/24/Reindeer.png",
+      Paint: "https://static.wikia.nocookie.net/stealabr/images/2/28/Chicleteirabicicleteira.png",
+      "26": "https://static.wikia.nocookie.net/stealabr/images/a/a7/2026Trait.png",
+      Firework: "https://static.wikia.nocookie.net/stealabr/images/6/62/Fireworks.png",
+      Skibidi: "https://static.wikia.nocookie.net/stealabr/images/7/7b/SkibidiIcon.png",
+      Meowl: "https://static.wikia.nocookie.net/stealabr/images/f/f9/ICON_Meowl.png",
+      Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png"
+    };
 
     const myItems = [
       { n: "382.5M/S", p: "75₪", img: "https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c: "CANDY", t: ["Taco","UFO","Spider","Star","Fire"] },
@@ -184,36 +190,45 @@
 
     const grid = document.getElementById("mainGrid");
 
-    // Split traits: first 11 left, remaining (up to 11) right. Max 22 total.
-    function splitTraits(traits) {
-      const clean = (traits || [])
-        .filter(Boolean)
-        .slice(0, 22);
+    function fixWikia(url) {
+      if (!url) return "";
+      if (url.includes("/revision/latest")) return url;
+      return url + "/revision/latest?cb=1";
+    }
+
+    /* NEW: balanced split (even sides), max 22 traits total, max 11 each side */
+    function splitTraitsEven(traits) {
+      const clean = (traits || []).filter(Boolean).slice(0, 22);
+
+      const n = clean.length;
+      const leftCount = Math.min(11, Math.ceil(n / 2));  // 6 -> 3, 15 -> 8
+      const rightCount = Math.min(11, n - leftCount);
+
       return {
-        left: clean.slice(0, 11),
-        right: clean.slice(11, 22)
+        left: clean.slice(0, leftCount),
+        right: clean.slice(leftCount, leftCount + rightCount)
       };
     }
 
-    // Build icons HTML
     function traitsHtml(traitList) {
       if (!traitList || traitList.length === 0) return "";
       return traitList.map(name => {
-        const url = TRAIT_ICONS[name] || "";
-        // If url is empty, we still show a subtle placeholder box, but tooltip still works.
-        if (!url) {
-          return `<span class="trait-icon" title="${name}"></span>`;
-        }
-        return `<img class="trait-icon" src="${url}" alt="${name}" title="${name}" />`;
+        const raw = TRAIT_ICONS[name] || "";
+        const url = fixWikia(raw);
+
+        if (!url) return `<span class="trait-icon" title="${name}"></span>`;
+        return `<img class="trait-icon" src="${url}" alt="${name}" title="${name}" loading="lazy" />`;
       }).join("");
     }
 
     function renderShop() {
       grid.innerHTML = myItems.map((item, index) => {
         const colorClass = item.c ? item.c : "DEFAULT";
-        const parts = splitTraits(item.t);
+        const parts = splitTraitsEven(item.t);
 
-        const imgSrc = item.img && item.img.trim() ? item.img : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='140'%3E%3Crect width='100%25' height='100%25' fill='%23111111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaaaaa' font-family='Segoe UI' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
+        const imgSrc = item.img && item.img.trim()
+          ? fixWikia(item.img)
+          : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='140'%3E%3Crect width='100%25' height='100%25' fill='%23111111'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaaaaa' font-family='Segoe UI' font-size='14'%3ENo Image%3C/text%3E%3C/svg%3E";
 
         return `
           <div class="card ${colorClass}" id="unit-${index}">
