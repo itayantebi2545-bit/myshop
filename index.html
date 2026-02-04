@@ -37,12 +37,16 @@ h1{
   text-shadow:0 0 15px var(--accent);
 }
 
-/* ✅ FIXED: AUTO-CENTER AFTER DELETE (still 4 per row when possible) */
+/* ✅ FIX: ALWAYS 4 PER ROW + CENTER LAST ROW AFTER DELETE */
 .grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, 200px); /* <-- THIS IS THE FIX */
+  display:flex;
+  flex-wrap:wrap;
   gap:20px;
   justify-content:center;
+
+  /* 4 cards (200px) + 3 gaps (20px) = 860px */
+  max-width:860px;
+  margin:0 auto;
 }
 
 /* CARD */
@@ -217,7 +221,7 @@ const myItems = [
   { n:"585M/S", p:"85₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t:["Taco","Gum","Fire","Bombardilo","LaChucaracha","Shark","Matteo","Star","Strawberry","Reindeer"] },
   { n:"637M/S", p:"90₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c:"GOLD", t:["Gum"] },
   { n:"200M/S", p:"150₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ef/Moby.png", c:"GOLD" },
-  { n:"160M/S", p:"130₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ef/Moby.png", },
+  { n:"160M/S", p:"130₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ef/Moby.png" },
   { n:"372M/S", p:"35₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b5/Bacuru_and_Egguru.png", t:["Gum","Bombardilo","Fire","Matteo"] },
   { n:"62.5M/S", p:"40₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD", t:["Taco"] },
   { n:"62.5M/S", p:"40₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD", t:["Taco"] },
