@@ -3,34 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wheel of Names Clone</title>
+    <title>Wheel of Names</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="main-wrapper">
-        <div class="wheel-area">
-            <div class="arrow"></div>
-            <canvas id="wheelCanvas" width="500" height="500"></canvas>
-            <button id="spinBtn">SPIN</button>
+    <div class="app-container">
+        <div class="main-content">
+            <div class="wheel-wrapper">
+                <canvas id="wheelCanvas" width="700" height="700"></canvas>
+                <div class="wheel-pointer"></div>
+                <div class="center-circle" id="spinBtn">
+                    <span>SPIN</span>
+                </div>
+            </div>
         </div>
         
-        <div class="sidebar">
-            <h2>Names List</h2>
+        <div class="side-panel">
+            <div class="tabs">
+                <div class="tab active">Entries</div>
+                <div class="tab">Results</div>
+            </div>
             <textarea id="nameInput" spellcheck="false">GOLD
 DIAMOND
 RAINBOW
 Player 1
 Player 2
 Player 3</textarea>
-            <p class="hint">One name per line</p>
+            <div class="panel-footer">
+                <button id="shuffleBtn">Shuffle</button>
+                <button id="sortBtn">Sort</button>
+            </div>
         </div>
     </div>
 
     <div id="winModal" class="modal">
         <div class="modal-box">
-            <h2>Winner!</h2>
+            <div class="confetti"></div>
+            <h2>We have a winner!</h2>
             <div id="winnerDisplay"></div>
-            <button onclick="document.getElementById('winModal').style.display='none'">Close</button>
+            <button class="close-btn" onclick="document.getElementById('winModal').style.display='none'">Close</button>
         </div>
     </div>
 
