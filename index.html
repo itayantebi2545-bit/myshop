@@ -1,295 +1,39 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FUELLING SHOP</title>
-
-<style>
-:root{
-  --card-bg: rgba(20,20,25,.95);
-  --accent:#00f2ea;
-  --price-color:#ffd700;
-
-  --trait-size:18px;
-
-  /* LOCKED POSITIONS */
-  --ms-top:165px;
-  --price-top:210px;
-}
-
-body{
-  margin:0;
-  background:#050505;
-  color:#fff;
-  font-family:'Segoe UI',system-ui,sans-serif;
-}
-
-.shop-container{
-  padding:40px 20px;
-}
-
-h1{
-  text-align:center;
-  color:var(--accent);
-  font-size:40px;
-  margin-bottom:40px;
-  text-shadow:0 0 15px var(--accent);
-  }
-
-/* ✅ FIXED: ALWAYS 4 PER ROW + CENTER LAST ROW */
-.grid{
-  display:flex;
-  flex-wrap:wrap;
-  gap:20px;
-  justify-content:center;
-
-  /* 4 cards (200px) + 3 gaps (20px) = 860px */
-  max-width:860px;
-  margin:0 auto;
-}
-
-/* CARD */
-.card{
-  width:200px;
-  min-height:260px;
-  background:var(--card-bg);
-  border-radius:12px;
-  border:2px solid white;
-  box-shadow:0 0 20px rgba(255,255,255,.4);
-  position:relative;
-  padding-top:14px;
-  overflow:visible;
-
-  /* ✅ CHANGE #1: keeps card truly 200px wide including border */
-  box-sizing:border-box;
-}
-
-/* ===== HOVER DELETE BUTTON ===== */
-.delete-btn{
-  position:absolute;
-  top:-10px;
-  left:-10px;
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  border:2px solid #fff;
-  background:#ff4d4d;
-  color:#fff;
-  font-weight:900;
-  cursor:pointer;
-  display:none;
-  z-index:10;
-  line-height:24px;
-  text-align:center;
-}
-
-.card:hover .delete-btn{
-  display:block;
-}
-
-/* ===== FLY-AWAY ANIMATION ===== */
-.card.removing{
-  animation: flyAway .35s ease forwards;
-  pointer-events:none;
-}
-
-@keyframes flyAway{
-  to{
-    transform: translateY(-20px) scale(0.85);
-    opacity:0;
-  }
-}
-
-/* IMAGE */
-.img-box{
-  height:120px;
-  margin:0 18px;
-  background:rgba(255,255,255,.05);
-  border-radius:8px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-}
-
-.img-box img{
-  max-width:95%;
-  max-height:95%;
-  object-fit:contain;
-}
-
-/* TRAITS */
-.traits{
-  position:absolute;
-  top:145px;
-  display:grid;
-  grid-template-columns:repeat(2,var(--trait-size));
-  gap:4px;
-}
-
-.traits.left{ left:14px; }
-.traits.right{ right:14px; }
-
-.trait-icon{
-  width:var(--trait-size);
-  height:var(--trait-size);
-  border-radius:4px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.06);
-  object-fit:cover;
-}
-
-.trait-icon.is-broken{ display:none; }
-
-/* LOCKED TEXT */
-.name{
-  position:absolute;
-  top:var(--ms-top);
-  left:50%;
-  transform:translateX(-50%);
-  font-weight:800;
-  font-size:19px;
-  white-space:nowrap;
-}
-
-/* LOCKED PRICE */
-.price{
-  position:absolute;
-  top:var(--price-top);
-  left:50%;
-  transform:translateX(-50%);
-  color:var(--price-color);
-  font-weight:bold;
-  border:1.5px solid var(--price-color);
-  padding:4px 15px;
-  border-radius:6px;
-}
-
-/* COLORS */
-.card.LAVA{ border-color:#ff3b00; box-shadow:0 0 10px rgba(255,80,0,.9); }
-.card.GOLD{ border-color:#ffd700; box-shadow:0 0 20px rgba(255,215,0,.6); }
-.card.CANDY{ border-color:#ff69b4; box-shadow:0 0 20px rgba(255,105,180,.6); }
-.card.RADIOACTIVE{ border-color:#39ff14; box-shadow:0 0 20px rgba(57,255,20,.7); }
-.card.GALAXY{ border-color:#ff00ff; box-shadow:0 0 20px rgba(255,0,255,.6); }
-.card.DIAMOND{ border-color:#1A82FF; box-shadow:0 0 20px rgba(26,130,255,.6); }
-.card.BLOODROT{ border-color:#ff0000; box-shadow:0 0 20px rgba(255,0,0,.7); }
-.card.RAINBOW{
-  border:2px solid transparent;
-  background:
-    linear-gradient(var(--card-bg),var(--card-bg)) padding-box,
-    linear-gradient(45deg,red,orange,yellow,green,blue,purple) border-box;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel of Names Clone</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-<div class="shop-container">
-  <h1>FUELLING SHOP</h1>
-  <div class="grid" id="mainGrid"></div>
-</div>
-
-<script>
-/* TRAITS */
-const TRAIT_ICONS = {
-  Taco: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Taco.png",
-  UFO: "https://static.wikia.nocookie.net/stealabr/images/3/38/Alienevent.webp",
-  Spider: "https://static.wikia.nocookie.net/stealabr/images/a/ad/Spider.webp",
-  Star: "https://static.wikia.nocookie.net/stealabr/images/1/15/Cometstruck.webp",
-  LaVaca: "https://static.wikia.nocookie.net/stealabr/images/c/cb/Comet2.png",
-  Fire: "https://static.wikia.nocookie.net/stealabr/images/3/30/Fire.png",
-  Bombardilo: "https://static.wikia.nocookie.net/stealabr/images/4/4c/Bombardiro.png",
-  Matteo: "https://static.wikia.nocookie.net/stealabr/images/d/d3/MatteoHat.png",
-  LaChucaracha: "https://static.wikia.nocookie.net/stealabr/images/f/f5/Mexico_Hat.png",
-  Rip: "https://static.wikia.nocookie.net/stealabr/images/7/75/GraveYard-RIP-Tombstone.png",
-  Indonesia: "https://static.wikia.nocookie.net/stealabr/images/6/61/Indonesian.png",
-  Glitch: "https://static.wikia.nocookie.net/stealabr/images/0/01/Glitch.png",
-  Crab: "https://static.wikia.nocookie.net/stealabr/images/f/f6/CrabClaw.png",
-  NyanCat: "https://static.wikia.nocookie.net/stealabr/images/9/92/Nyan.png",
-  Brazil: "https://static.wikia.nocookie.net/stealabr/images/8/8c/Brazil.png",
-  Reindeer: "https://static.wikia.nocookie.net/stealabr/images/2/24/Reindeer.png",
-  Paint: "https://static.wikia.nocookie.net/stealabr/images/2/28/Chicleteirabicicleteira.png",
-  "26": "https://static.wikia.nocookie.net/stealabr/images/a/a7/2026Trait.png",
-  Firework: "https://static.wikia.nocookie.net/stealabr/images/6/62/Fireworks.png",
-  Skibidi: "https://static.wikia.nocookie.net/stealabr/images/7/7b/SkibidiIcon.png",
-  Meowl: "https://static.wikia.nocookie.net/stealabr/images/f/f9/ICON_Meowl.png",
-  Strawberry: "https://static.wikia.nocookie.net/stealabr/images/6/6d/Strawberry.png",
-  Gum: "https://static.wikia.nocookie.net/stealabr/images/0/02/Bubblegum.png",
-  Shark: "https://static.wikia.nocookie.net/stealabr/images/4/4d/Shark_Fin.webp"
-};
-
-/* ITEMS (PUT YOUR FULL LIST HERE) */
-const myItems = [
-  { n:"2.7B/S", p:"200₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", t:["Fire","Paint","Indonesia","Bombardilo"] },
-  { n:"1.6B/S", p:"160₪", img:"https://static.wikia.nocookie.net/stealabr/images/6/65/Burguro-And-Fryuro.png", c:"LAVA", t:["NyanCat"] },
-  { n:"585M/S", p:"50₪", img:"https://static.wikia.nocookie.net/stealabr/images/b/b3/Noel.png", t:["Taco","Gum","Fire","Bombardilo","LaChucaracha","Shark","Matteo","Star","Strawberry","Reindeer"] },
-  { n:"1.1B/S", p:"165₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", t:["Fire","LaChucaracha","26","Matteo","Spider"] },
-  { n:"500M/S", p:"80₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"RAINBOW" },
-  { n:"595M/S", p:"55₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"DIAMOND", t:["Spider","Fire","LaChucaracha"] },
-  { n:"425M/S", p:"35₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"RAINBOW" },
-  { n:"1.2B/S", p:"190₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"RAINBOW", t:["Taco","UFO","NyanCat","Fire"] },
-  { n:"467M/S", p:"50₪", img:"https://static.wikia.nocookie.net/stealabr/images/1/14/Ketchuru.png", c:"BLOODROT", t:["Taco"] },
-  { n:"62M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD" },
-  { n:"62M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD" },
-  { n:"62M/S", p:"30₪", img:"https://static.wikia.nocookie.net/stealabr/images/e/ee/Garamadundung.png", c:"GOLD" }
-];
-
-/* HELPERS */
-function cache(u){
-  if(!u) return "";
-  const joiner = u.includes("?") ? "&" : "?";
-  return u + joiner + "cb=" + Date.now();
-}
-
-function splitEven(arr){
-  const a = (arr || []).slice(0, 22);
-  const mid = Math.ceil(a.length / 2);
-  return { l: a.slice(0, mid), r: a.slice(mid) };
-}
-
-function traitsHTML(list){
-  return (list || []).map(t => {
-    const u = TRAIT_ICONS[t];
-    if(!u) return "";
-    return `<img class="trait-icon" src="${cache(u)}"
-      referrerpolicy="no-referrer"
-      onerror="this.classList.add('is-broken')">`;
-  }).join("");
-}
-
-/* REMOVE CARD */
-function removeCard(index){
-  const card = document.getElementById(`card-${index}`);
-  if(!card) return;
-  card.classList.add("removing");
-  setTimeout(() => card.remove(), 350);
-}
-
-/* RENDER */
-/* ✅ CHANGE #2: max 12 cards = 3 rows of 4 */
-const grid = document.getElementById("mainGrid");
-grid.innerHTML = myItems.slice(0, 12).map((i, idx) => {
-  const s = splitEven(i.t || []);
-  const cardClass = i.c ? i.c : "";
-
-  return `
-    <div class="card ${cardClass}" id="card-${idx}">
-      <button class="delete-btn" type="button" onclick="removeCard(${idx})">✕</button>
-
-      <div class="img-box">
-        <img src="${cache(i.img)}"
-             referrerpolicy="no-referrer"
-             onerror="this.style.display='none'">
-      </div>
-
-      <div class="traits left">${traitsHTML(s.l)}</div>
-      <div class="traits right">${traitsHTML(s.r)}</div>
-
-      <div class="name">${i.n}</div>
-      <div class="price">${i.p}</div>
+    <div class="main-wrapper">
+        <div class="wheel-area">
+            <div class="arrow"></div>
+            <canvas id="wheelCanvas" width="500" height="500"></canvas>
+            <button id="spinBtn">SPIN</button>
+        </div>
+        
+        <div class="sidebar">
+            <h2>Names List</h2>
+            <textarea id="nameInput" spellcheck="false">GOLD
+DIAMOND
+RAINBOW
+Player 1
+Player 2
+Player 3</textarea>
+            <p class="hint">One name per line</p>
+        </div>
     </div>
-  `;
-}).join("");
-</script>
+
+    <div id="winModal" class="modal">
+        <div class="modal-box">
+            <h2>Winner!</h2>
+            <div id="winnerDisplay"></div>
+            <button onclick="document.getElementById('winModal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
